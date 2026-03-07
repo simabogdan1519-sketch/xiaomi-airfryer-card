@@ -78,10 +78,11 @@ class XiaomiAirFryerCard extends HTMLElement {
     const currWarm = this._state('current_keep_warm');
     const turnCfg  = this._state('turn_pot_config');
 
+    const weight    = this._state('cooking_weight');
     const totalTime = parseFloat(time) || 20;
     const left      = parseFloat(leftTime) || 0;
     const pct       = totalTime > 0 ? Math.round(((totalTime - left) / totalTime) * 100) : 0;
-    const isActive  = ['Cooking','Preheat','Keep Warm'].includes(status);
+    const isActive  = ['cooking','preheat','keep_warm','keepwarm','Cooking','Preheat','Keep Warm'].includes(status);
 
     // header
     this._q('#statusText').textContent = this._statusLabel(status);
@@ -101,6 +102,14 @@ class XiaomiAirFryerCard extends HTMLElement {
     }
     if (time !== 'unavailable') {
       this._q('#timeVal').innerHTML = time + ' <small>min</small>';
+    }
+
+    // stat3 - weight
+    if (weight !== 'unavailable') {
+      const wEl = this._q('#statWeight');
+      if (wEl) wEl.textContent = weight + 'g';
+      const wVal = this._q('#weightVal');
+      if (wVal) wVal.innerHTML = weight + ' <small>g</small>';
     }
 
     // led2
@@ -135,12 +144,25 @@ class XiaomiAirFryerCard extends HTMLElement {
 
   _statusLabel(s) {
     const map = {
-      'Cooking': '🔥 Gătire', 'Standby': '⏸ Standby',
-      'Pause': '⏸ Pauză', 'Preheat': '🌡 Preîncălzire',
-      'Keep Warm': '♨️ Keep Warm', 'Appointment': '⏰ Programat',
-      'unavailable': '● Offline',
+      // valori reale din integrare
+      'idle':       '⏸ Standby',
+      'cooking':    '🔥 Gătire',
+      'pause':      '⏸ Pauză',
+      'preheat':    '🌡 Preîncălzire',
+      'keep_warm':  '♨️ Keep Warm',
+      'keepwarm':   '♨️ Keep Warm',
+      'appointment':'⏰ Programat',
+      'fault':      '⚠️ Eroare',
+      // fallback valori text (unele integrări returnează string capitalizat)
+      'Cooking':    '🔥 Gătire',
+      'Standby':    '⏸ Standby',
+      'Pause':      '⏸ Pauză',
+      'Preheat':    '🌡 Preîncălzire',
+      'Keep Warm':  '♨️ Keep Warm',
+      'Appointment':'⏰ Programat',
+      'unavailable':'● Offline',
     };
-    return map[s] || s;
+    return map[s] ?? s;
   }
 
   _setToggle(sel, on) {
@@ -181,6 +203,16 @@ class XiaomiAirFryerCard extends HTMLElement {
     this._q('#timePlus').addEventListener('click', () => {
       const v = parseFloat(this._state('target_time')) || 20;
       this._setNumber('target_time', Math.min(1440, v + 5));
+    });
+
+    // weight +/-
+    this._q('#weightMinus').addEventListener('click', () => {
+      const v = parseFloat(this._state('cooking_weight')) || 100;
+      this._setNumber('cooking_weight', Math.max(100, v - 50));
+    });
+    this._q('#weightPlus').addEventListener('click', () => {
+      const v = parseFloat(this._state('cooking_weight')) || 100;
+      this._setNumber('cooking_weight', Math.min(1800, v + 50));
     });
 
     // mode chips
@@ -307,7 +339,7 @@ class XiaomiAirFryerCard extends HTMLElement {
           <div class="stats">
             <div class="stat"><span class="stat-val" id="statTemp">—°</span><span class="stat-key">Temp.</span></div>
             <div class="stat"><span class="stat-val" id="statLeft">—</span><span class="stat-key">Min răm.</span></div>
-            <div class="stat"><span class="stat-val">MAF10A</span><span class="stat-key">Model</span></div>
+            <div class="stat"><span class="stat-val" id="statWeight">—g</span><span class="stat-key">Greutate</span></div>
           </div>
 
           <div class="progress-section">
@@ -341,7 +373,7 @@ class XiaomiAirFryerCard extends HTMLElement {
 
         <div class="panel-scroll">
 
-          <div class="section-label">Temperatură &amp; Timp</div>
+          <div class="section-label">Temperatură, Timp &amp; Greutate</div>
           <div class="num-row">
             <div class="num-control">
               <div class="num-label">Temperatură</div>
@@ -363,6 +395,19 @@ class XiaomiAirFryerCard extends HTMLElement {
                 </div>
               </div>
             </div>
+          </div>
+          <div class="num-row">
+            <div class="num-control">
+              <div class="num-label">Greutate (g)</div>
+              <div class="num-mid">
+                <div class="num-value" id="weightVal">— <small>g</small></div>
+                <div class="num-btns">
+                  <button class="num-btn" id="weightMinus">−</button>
+                  <button class="num-btn" id="weightPlus">+</button>
+                </div>
+              </div>
+            </div>
+            <div style="flex:1"></div>
           </div>
 
           <div class="section-label">Program gătire</div>
