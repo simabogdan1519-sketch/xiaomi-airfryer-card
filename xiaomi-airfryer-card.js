@@ -23,9 +23,29 @@ class XiaomiAirFryerCard extends HTMLElement {
       this._built = true;
     }
     this._update();
+    if (!this._debugged) { this._debugged = true; setTimeout(() => this._debug(), 2000); }
   }
 
   getCardSize() { return 6; }
+
+  // DEBUG temporar - sterge dupa ce merge
+  _debug() {
+    const keys = [
+      `sensor.${this._device}_air_fryer`,
+      `sensor.${this._device}_left_time`,
+      `number.${this._device}_target_temperature`,
+      `number.${this._device}_target_time`,
+    ];
+    console.group("[AirFryerCard] Entity states");
+    keys.forEach(k => {
+      const s = this._hass?.states[k];
+      console.log(k, "→", s ? s.state : "NOT FOUND ❌");
+    });
+    // Arata toate entitatile care contin device-ul
+    const all = Object.keys(this._hass?.states||{}).filter(k=>k.includes(this._device));
+    console.log("Toate entitatile device:", all);
+    console.groupEnd();
+  }
 
   // ── Entity ID helpers – cu domain explicit ──────────────────
   _s(suffix)   { return this._hass?.states[`sensor.${this._device}_${suffix}`]?.state  ?? 'unavailable'; }
@@ -33,17 +53,19 @@ class XiaomiAirFryerCard extends HTMLElement {
   _sel(suffix) { return this._hass?.states[`select.${this._device}_${suffix}`]?.state  ?? 'unavailable'; }
   _sw(suffix)  { return this._hass?.states[`switch.${this._device}_${suffix}`]?.state  ?? 'unavailable'; }
 
-  _pressButton(suffix) {
-    this._hass.callService('button', 'press', { entity_id: `button.${this._device}_${suffix}` });
+  _call(domain, service, suffix, extra = {}) {
+    const eid = `${domain}.${this._device}_${suffix}`;
+    console.log('[AirFryerCard] callService', domain, service, eid);
+    if (!eid || !this._device) return;
+    this._hass.callService(domain, service, { entity_id: eid, ...extra });
   }
-  _setNumber(suffix, value) {
-    this._hass.callService('number', 'set_value', { entity_id: `number.${this._device}_${suffix}`, value });
-  }
-  _selectOption(suffix, option) {
-    this._hass.callService('select', 'select_option', { entity_id: `select.${this._device}_${suffix}`, option });
-  }
-  _toggleSwitch(suffix) {
-    this._hass.callService('homeassistant', 'toggle', { entity_id: `switch.${this._device}_${suffix}` });
+  _pressButton(suffix)            { this._call('button',        'press',         suffix); }
+  _setNumber(suffix, value)       { this._call('number',        'set_value',     suffix, { value }); }
+  _selectOption(suffix, option)   { this._call('select',        'select_option', suffix, { option }); }
+  _toggleSwitch(suffix)           { 
+    const eid = `switch.${this._device}_${suffix}`;
+    console.log('[AirFryerCard] toggle switch', eid);
+    this._hass.callService('homeassistant', 'toggle', { entity_id: eid }); 
   }
 
   // ── Update din starea HA ────────────────────────────────────
