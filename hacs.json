@@ -1,0 +1,10 @@
+{
+  "name": "Xiaomi Air Fryer Card",
+  "description": "Custom Lovelace card for Xiaomi Smart Air Fryer (careli MAF10A) with 3D animated design.",
+  "content_in_root": true,
+  "filename": "xiaomi-airfryer-card.js",
+  "homeassistant": "2023.1.0",
+  "documentation": "https://github.com/YOUR_USERNAME/xiaomi-airfryer-card",
+  "issues": "https://github.com/YOUR_USERNAME/xiaomi-airfryer-card/issues",
+  "render_readme": true
+}
