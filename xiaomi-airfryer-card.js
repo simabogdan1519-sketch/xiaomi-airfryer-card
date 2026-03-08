@@ -1,9 +1,8 @@
 /**
  * Xiaomi Air Fryer – Custom Lovelace Card
  *
- * Instalare HACS:
- *   type: custom:xiaomi-airfryer-card
- *   device: careli_maf10a_1c99
+ * type: custom:xiaomi-airfryer-card
+ * device: careli_maf10a_1c99
  */
 
 class XiaomiAirFryerCard extends HTMLElement {
@@ -23,31 +22,11 @@ class XiaomiAirFryerCard extends HTMLElement {
       this._built = true;
     }
     this._update();
-    if (!this._debugged) { this._debugged = true; setTimeout(() => this._debug(), 2000); }
   }
 
   getCardSize() { return 6; }
 
-  // DEBUG temporar - sterge dupa ce merge
-  _debug() {
-    const keys = [
-      `sensor.${this._device}_air_fryer`,
-      `sensor.${this._device}_left_time`,
-      `number.${this._device}_target_temperature`,
-      `number.${this._device}_target_time`,
-    ];
-    console.group("[AirFryerCard] Entity states");
-    keys.forEach(k => {
-      const s = this._hass?.states[k];
-      console.log(k, "→", s ? s.state : "NOT FOUND ❌");
-    });
-    // Arata toate entitatile care contin device-ul
-    const all = Object.keys(this._hass?.states||{}).filter(k=>k.includes(this._device));
-    console.log("Toate entitatile device:", all);
-    console.groupEnd();
-  }
-
-  // ── Entity ID helpers – cu domain explicit ──────────────────
+  // ── Entity helpers ──────────────────────────────────────────
   _s(suffix)   { return this._hass?.states[`sensor.${this._device}_${suffix}`]?.state  ?? 'unavailable'; }
   _n(suffix)   { return this._hass?.states[`number.${this._device}_${suffix}`]?.state  ?? 'unavailable'; }
   _sel(suffix) { return this._hass?.states[`select.${this._device}_${suffix}`]?.state  ?? 'unavailable'; }
@@ -55,20 +34,17 @@ class XiaomiAirFryerCard extends HTMLElement {
 
   _call(domain, service, suffix, extra = {}) {
     const eid = `${domain}.${this._device}_${suffix}`;
-    console.log('[AirFryerCard] callService', domain, service, eid);
-    if (!eid || !this._device) return;
     this._hass.callService(domain, service, { entity_id: eid, ...extra });
   }
-  _pressButton(suffix)            { this._call('button',        'press',         suffix); }
-  _setNumber(suffix, value)       { this._call('number',        'set_value',     suffix, { value }); }
-  _selectOption(suffix, option)   { this._call('select',        'select_option', suffix, { option }); }
-  _toggleSwitch(suffix)           { 
+  _pressButton(suffix)          { this._call('button',  'press',         suffix); }
+  _setNumber(suffix, value)     { this._call('number',  'set_value',     suffix, { value }); }
+  _selectOption(suffix, option) { this._call('select',  'select_option', suffix, { option }); }
+  _toggleSwitch(suffix) {
     const eid = `switch.${this._device}_${suffix}`;
-    console.log('[AirFryerCard] toggle switch', eid);
-    this._hass.callService('homeassistant', 'toggle', { entity_id: eid }); 
+    this._hass.callService('homeassistant', 'toggle', { entity_id: eid });
   }
 
-  // ── Update din starea HA ────────────────────────────────────
+  // ── Update ──────────────────────────────────────────────────
   _update() {
     if (!this._hass || !this._built) return;
 
@@ -86,20 +62,27 @@ class XiaomiAirFryerCard extends HTMLElement {
     const curWrm  = this._sw('current_keep_warm');
     const turnCfg = this._sw('turn_pot_config');
 
-    const totalMin = parseFloat(time)   || 20;
-    const leftMin  = parseFloat(left)   || 0;
+    const totalMin = parseFloat(time)  || 20;
+    const leftMin  = parseFloat(left)  || 0;
     const pct      = totalMin > 0 ? Math.round(((totalMin - leftMin) / totalMin) * 100) : 0;
     const isActive = ['cooking','preheat','keep_warm'].includes(status?.toLowerCase?.());
 
-    // status badge
     this._q('#statusText').textContent = this._statusLabel(status);
     this._q('#statusBadge').className  = 'status-badge ' + (isActive ? 'active' : 'idle');
 
-    // LCD + stats
     if (temp !== 'unavailable') {
-      this._q('#lcdTemp').textContent   = temp + '°C';
-      this._q('#statTemp').textContent  = temp + '°';
-      this._q('#tempVal').innerHTML     = temp + ' <small>°C</small>';
+      const tv = parseFloat(temp);
+      this._q('#lcdTemp').textContent  = tv + '°C';
+      this._q('#statTemp').textContent = tv + '°';
+      // slider + display (only if panel not being dragged)
+      if (!this._draggingTemp) {
+        this._q('#tempDisplay').innerHTML = tv + ' <small>°C</small>';
+        this._q('#tempSlider').value      = tv;
+        this._q('#tempFill').style.width  = this._pct(tv, 40, 230);
+        this._shadowAll('#tempPresets .preset').forEach(p =>
+          p.classList.toggle('active', parseInt(p.dataset.val) === tv)
+        );
+      }
     }
     if (left !== 'unavailable') {
       this._q('#lcdTime').textContent   = leftMin + ' min';
@@ -108,34 +91,36 @@ class XiaomiAirFryerCard extends HTMLElement {
       this._q('#progFill').style.width  = pct + '%';
     }
     if (time !== 'unavailable') {
-      this._q('#timeVal').innerHTML = time + ' <small>min</small>';
+      const tv = parseFloat(time);
+      if (!this._draggingTime) {
+        this._q('#timeDisplay').innerHTML = tv + ' <small>min</small>';
+        this._q('#timeSlider').value      = tv;
+        this._q('#timeFill').style.width  = this._pct(tv, 1, 120);
+        this._shadowAll('#timePresets .tpreset').forEach(p =>
+          p.classList.toggle('active', parseInt(p.dataset.val) === tv)
+        );
+      }
     }
     if (weight !== 'unavailable') {
-      this._q('#statWeight').textContent = weight + 'g';
-      this._q('#weightVal').innerHTML    = weight + ' <small>g</small>';
+      this._q('#statWeight').textContent = parseFloat(weight) + 'g';
+      this._q('#weightDisplay').innerHTML = parseFloat(weight) + ' <small>g</small>';
     }
 
-    // LED activ
     this._q('#led2').classList.toggle('on', isActive);
 
-    // Mode chips
-    this._all('.chip[data-group="mode"]').forEach(c =>
+    this._shadowAll('.chip[data-group="mode"]').forEach(c =>
       c.classList.toggle('active', c.dataset.val === mode)
     );
-    // Texture
-    this._all('.seg-btn[data-group="texture"]').forEach(b =>
+    this._shadowAll('.seg-btn[data-group="texture"]').forEach(b =>
       b.classList.toggle('active', b.dataset.val === texture)
     );
-    // Measure
-    this._all('.seg-btn[data-group="measure"]').forEach(b =>
+    this._shadowAll('.seg-btn[data-group="measure"]').forEach(b =>
       b.classList.toggle('active', b.dataset.val === measure)
     );
-    // Turn pot
-    this._all('.seg-btn[data-group="turnpot"]').forEach(b =>
+    this._shadowAll('.seg-btn[data-group="turnpot"]').forEach(b =>
       b.classList.toggle('active', b.dataset.val === turnPot)
     );
 
-    // Toggles
     this._tog('#togglePreheat', preheat === 'on');
     this._tog('#toggleAutoWrm', autoWrm === 'on');
     this._tog('#toggleCurWrm',  curWrm  === 'on');
@@ -144,20 +129,16 @@ class XiaomiAirFryerCard extends HTMLElement {
 
   _statusLabel(s) {
     const map = {
-      'idle':       '⏸ Standby',
-      'cooking':    '🔥 Gătire',
-      'pause':      '⏸ Pauză',
-      'preheat':    '🌡 Preîncălzire',
-      'keep_warm':  '♨️ Keep Warm',
-      'appointment':'⏰ Programat',
-      'fault':      '⚠️ Eroare',
-      'unavailable':'● Offline',
+      'idle':'⏸ Standby','cooking':'🔥 Gătire','pause':'⏸ Pauză',
+      'preheat':'🌡 Preîncălzire','keep_warm':'♨️ Keep Warm',
+      'appointment':'⏰ Programat','fault':'⚠️ Eroare','unavailable':'● Offline',
     };
-    return map[s?.toLowerCase?.()] ?? map[s] ?? s ?? '—';
+    return map[s?.toLowerCase?.()] ?? s ?? '—';
   }
 
+  _pct(val, min, max) { return ((val - min) / (max - min) * 100).toFixed(1) + '%'; }
   _q(sel)   { return this.shadowRoot.querySelector(sel); }
-  _all(sel) { return [...this.shadowRoot.querySelectorAll(sel)]; }
+  _shadowAll(sel) { return [...this.shadowRoot.querySelectorAll(sel)]; }
   _tog(sel, on) { this._q(sel)?.classList.toggle('on', on); }
 
   // ── Build DOM ───────────────────────────────────────────────
@@ -170,35 +151,102 @@ class XiaomiAirFryerCard extends HTMLElement {
   }
 
   _attachEvents() {
+    // panel open/close
     this._q('#modelClick').addEventListener('click', () => this._togglePanel());
     this._q('#overlay').addEventListener('click',    () => this._closePanel());
     this._q('#panelHandle').addEventListener('click',() => this._closePanel());
 
+    // cook buttons
     this._q('#btnStart').addEventListener('click',  () => this._pressButton('start_cook'));
     this._q('#btnPause').addEventListener('click',  () => this._pressButton('pause'));
     this._q('#btnResume').addEventListener('click', () => this._pressButton('resume_cook'));
     this._q('#btnStop').addEventListener('click',   () => this._pressButton('cancel_cooking'));
 
-    this._q('#tempMinus').addEventListener('click', () => this._setNumber('target_temperature', Math.max(40,  parseFloat(this._n('target_temperature')) - 5)));
-    this._q('#tempPlus').addEventListener('click',  () => this._setNumber('target_temperature', Math.min(230, parseFloat(this._n('target_temperature')) + 5)));
-    this._q('#timeMinus').addEventListener('click', () => this._setNumber('target_time',        Math.max(1,   parseFloat(this._n('target_time')) - 5)));
-    this._q('#timePlus').addEventListener('click',  () => this._setNumber('target_time',        Math.min(1440,parseFloat(this._n('target_time')) + 5)));
-    this._q('#weightMinus').addEventListener('click',() => this._setNumber('cooking_weight',    Math.max(100, parseFloat(this._n('cooking_weight')) - 50)));
-    this._q('#weightPlus').addEventListener('click', () => this._setNumber('cooking_weight',    Math.min(1800,parseFloat(this._n('cooking_weight')) + 50)));
+    // ── TEMP SLIDER ──
+    const tempSlider = this._q('#tempSlider');
+    tempSlider.addEventListener('mousedown', () => this._draggingTemp = true);
+    tempSlider.addEventListener('touchstart', () => this._draggingTemp = true);
+    tempSlider.addEventListener('mouseup',   () => { this._draggingTemp = false; this._setNumber('target_temperature', parseInt(tempSlider.value)); });
+    tempSlider.addEventListener('touchend',  () => { this._draggingTemp = false; this._setNumber('target_temperature', parseInt(tempSlider.value)); });
+    tempSlider.addEventListener('input', () => {
+      const v = parseInt(tempSlider.value);
+      this._q('#tempDisplay').innerHTML = v + ' <small>°C</small>';
+      this._q('#tempFill').style.width  = this._pct(v, 40, 230);
+      this._q('#lcdTemp').textContent   = v + '°C';
+      this._shadowAll('#tempPresets .preset').forEach(p =>
+        p.classList.toggle('active', parseInt(p.dataset.val) === v)
+      );
+    });
 
-    this._all('.chip[data-group="mode"]').forEach(c =>
+    // TEMP PRESETS
+    this._shadowAll('#tempPresets .preset').forEach(p => {
+      p.addEventListener('click', () => {
+        const v = parseInt(p.dataset.val);
+        this._q('#tempSlider').value     = v;
+        this._q('#tempDisplay').innerHTML = v + ' <small>°C</small>';
+        this._q('#tempFill').style.width  = this._pct(v, 40, 230);
+        this._q('#lcdTemp').textContent   = v + '°C';
+        this._shadowAll('#tempPresets .preset').forEach(x => x.classList.remove('active'));
+        p.classList.add('active');
+        this._setNumber('target_temperature', v);
+      });
+    });
+
+    // ── TIME SLIDER ──
+    const timeSlider = this._q('#timeSlider');
+    timeSlider.addEventListener('mousedown', () => this._draggingTime = true);
+    timeSlider.addEventListener('touchstart', () => this._draggingTime = true);
+    timeSlider.addEventListener('mouseup',   () => { this._draggingTime = false; this._setNumber('target_time', parseInt(timeSlider.value)); });
+    timeSlider.addEventListener('touchend',  () => { this._draggingTime = false; this._setNumber('target_time', parseInt(timeSlider.value)); });
+    timeSlider.addEventListener('input', () => {
+      const v = parseInt(timeSlider.value);
+      this._q('#timeDisplay').innerHTML = v + ' <small>min</small>';
+      this._q('#timeFill').style.width  = this._pct(v, 1, 120);
+      this._q('#lcdTime').textContent   = v + ' min';
+      this._shadowAll('#timePresets .tpreset').forEach(p =>
+        p.classList.toggle('active', parseInt(p.dataset.val) === v)
+      );
+    });
+
+    // TIME PRESETS
+    this._shadowAll('#timePresets .tpreset').forEach(p => {
+      p.addEventListener('click', () => {
+        const v = parseInt(p.dataset.val);
+        this._q('#timeSlider').value      = v;
+        this._q('#timeDisplay').innerHTML = v + ' <small>min</small>';
+        this._q('#timeFill').style.width  = this._pct(v, 1, 120);
+        this._q('#lcdTime').textContent   = v + ' min';
+        this._shadowAll('#timePresets .tpreset').forEach(x => x.classList.remove('active'));
+        p.classList.add('active');
+        this._setNumber('target_time', v);
+      });
+    });
+
+    // WEIGHT +/-
+    this._q('#weightMinus').addEventListener('click', () => {
+      const v = parseFloat(this._n('cooking_weight')) || 100;
+      this._setNumber('cooking_weight', Math.max(100, v - 50));
+    });
+    this._q('#weightPlus').addEventListener('click', () => {
+      const v = parseFloat(this._n('cooking_weight')) || 100;
+      this._setNumber('cooking_weight', Math.min(1800, v + 50));
+    });
+
+    // mode chips
+    this._shadowAll('.chip[data-group="mode"]').forEach(c =>
       c.addEventListener('click', () => this._selectOption('mode', c.dataset.val))
     );
-    this._all('.seg-btn[data-group="texture"]').forEach(b =>
+    this._shadowAll('.seg-btn[data-group="texture"]').forEach(b =>
       b.addEventListener('click', () => this._selectOption('texture', b.dataset.val))
     );
-    this._all('.seg-btn[data-group="measure"]').forEach(b =>
+    this._shadowAll('.seg-btn[data-group="measure"]').forEach(b =>
       b.addEventListener('click', () => this._selectOption('target_cooking_measure', b.dataset.val))
     );
-    this._all('.seg-btn[data-group="turnpot"]').forEach(b =>
+    this._shadowAll('.seg-btn[data-group="turnpot"]').forEach(b =>
       b.addEventListener('click', () => this._selectOption('turn_pot', b.dataset.val))
     );
 
+    // toggles
     this._q('#togglePreheat').addEventListener('click', () => this._toggleSwitch('preheat'));
     this._q('#toggleAutoWrm').addEventListener('click', () => this._toggleSwitch('auto_keep_warm'));
     this._q('#toggleCurWrm').addEventListener('click',  () => this._toggleSwitch('current_keep_warm'));
@@ -212,7 +260,7 @@ class XiaomiAirFryerCard extends HTMLElement {
   _buildMesh() {
     const mesh = this._q('#afMesh');
     for (let i = 0; i < 60; i++) { const c = document.createElement('div'); c.className = 'af-hole'; mesh.appendChild(c); }
-    setInterval(() => this._all('.af-hole').forEach(c => c.classList.toggle('hot', Math.random() > 0.52)), 500);
+    setInterval(() => this._shadowAll('.af-hole').forEach(c => c.classList.toggle('hot', Math.random() > 0.52)), 500);
   }
   _buildHeatWaves() {
     const heat = this._q('#afHeat');
@@ -228,6 +276,7 @@ class XiaomiAirFryerCard extends HTMLElement {
     <div class="card-wrap">
       <div class="ha-card af-card">
         <div class="card-main">
+
           <div class="card-header">
             <div class="header-left">
               <div class="header-icon">🍟</div>
@@ -301,31 +350,61 @@ class XiaomiAirFryerCard extends HTMLElement {
         </div>
         <div class="panel-scroll">
 
-          <div class="section-label">Temperatură, Timp &amp; Greutate</div>
-          <div class="num-row">
-            <div class="num-control">
-              <div class="num-label">Temperatură</div>
-              <div class="num-mid"><div class="num-value" id="tempVal">— <small>°C</small></div>
-                <div class="num-btns"><button class="num-btn" id="tempMinus">−</button><button class="num-btn" id="tempPlus">+</button></div>
-              </div>
+          <!-- TEMP -->
+          <div class="section-label">Temperatură țintă</div>
+          <div class="ctrl-block">
+            <div class="ctrl-big" id="tempDisplay">— <small>°C</small></div>
+            <div class="presets" id="tempPresets">
+              <div class="preset" data-val="100">100°</div>
+              <div class="preset" data-val="140">140°</div>
+              <div class="preset" data-val="160">160°</div>
+              <div class="preset" data-val="180">180°</div>
+              <div class="preset" data-val="200">200°</div>
+              <div class="preset" data-val="220">220°</div>
             </div>
-            <div class="num-control">
-              <div class="num-label">Timp (min)</div>
-              <div class="num-mid"><div class="num-value" id="timeVal">— <small>min</small></div>
-                <div class="num-btns"><button class="num-btn" id="timeMinus">−</button><button class="num-btn" id="timePlus">+</button></div>
-              </div>
+            <div class="slider-wrap">
+              <div class="slider-track"><div class="slider-fill orange" id="tempFill" style="width:0%"></div></div>
+              <input type="range" class="orange" id="tempSlider" min="40" max="230" step="5" value="180">
             </div>
-          </div>
-          <div class="num-row">
-            <div class="num-control">
-              <div class="num-label">Greutate (g)</div>
-              <div class="num-mid"><div class="num-value" id="weightVal">— <small>g</small></div>
-                <div class="num-btns"><button class="num-btn" id="weightMinus">−</button><button class="num-btn" id="weightPlus">+</button></div>
-              </div>
-            </div>
-            <div></div>
+            <div class="slider-limits"><span class="slider-limit">40°C</span><span class="slider-limit">230°C</span></div>
           </div>
 
+          <!-- TIMP -->
+          <div class="section-label">Timp gătire</div>
+          <div class="ctrl-block">
+            <div class="ctrl-big" id="timeDisplay">— <small>min</small></div>
+            <div class="time-presets" id="timePresets">
+              <div class="tpreset" data-val="5">5<span>min</span></div>
+              <div class="tpreset" data-val="10">10<span>min</span></div>
+              <div class="tpreset" data-val="15">15<span>min</span></div>
+              <div class="tpreset" data-val="20">20<span>min</span></div>
+              <div class="tpreset" data-val="30">30<span>min</span></div>
+              <div class="tpreset" data-val="45">45<span>min</span></div>
+              <div class="tpreset" data-val="60">60<span>min</span></div>
+            </div>
+            <div class="slider-wrap">
+              <div class="slider-track"><div class="slider-fill blue" id="timeFill" style="width:0%"></div></div>
+              <input type="range" class="blue" id="timeSlider" min="1" max="120" step="1" value="15">
+            </div>
+            <div class="slider-limits"><span class="slider-limit">1 min</span><span class="slider-limit">120 min</span></div>
+          </div>
+
+          <!-- GREUTATE -->
+          <div class="section-label">Greutate</div>
+          <div class="weight-row">
+            <div class="weight-left">
+              <div class="wlabel">Cooking Weight</div>
+              <div class="wval" id="weightDisplay">— <small>g</small></div>
+            </div>
+            <div class="wbtns">
+              <button class="wbtn" id="weightMinus">−</button>
+              <button class="wbtn" id="weightPlus">+</button>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- MOD -->
           <div class="section-label">Program gătire</div>
           <div class="chips-wrap">
             ${[['French Fries','🍟'],['Chicken Wing','🍗'],['Steak','🥩'],['Lamb Chops','🐑'],['Fish','🐟'],['Shrimp','🍤'],['Vegetables','🥦'],['Cake','🎂'],['Pizza','🍕'],['Defrost','❄️'],['Dried Fruit','🍇'],['Yogurt','🫙'],['Manual','🎛']]
@@ -350,7 +429,7 @@ class XiaomiAirFryerCard extends HTMLElement {
           </div>
 
           <div class="section-label">Întoarce coșul</div>
-          <div class="seg-btns" style="border-radius:10px;overflow:hidden;border:1px solid #2a2f45">
+          <div class="seg-btns" style="border-radius:10px;overflow:hidden;border:1px solid #2a2f45;margin-bottom:4px">
             <div class="seg-btn" data-group="turnpot" data-val="No Need Turn Over Pot" style="flex:1">Nu e nevoie</div>
             <div class="seg-btn" data-group="turnpot" data-val="Need Turn Over Pot"    style="flex:1">🔄 Întoarce</div>
           </div>
@@ -445,26 +524,51 @@ class XiaomiAirFryerCard extends HTMLElement {
     .btn-pause{color:#fbbf24}.btn-resume{color:#60a5fa}.btn-stop{color:#f87171}
     .panel-overlay{position:fixed;inset:0;background:rgba(5,6,12,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:100;opacity:0;pointer-events:none;transition:opacity .3s}
     .panel-overlay.visible{opacity:1;pointer-events:all}
-    .config-panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:360px;max-width:100vw;background:#181c27;border:1px solid #2a2f45;border-radius:24px 24px 0 0;z-index:200;transition:transform .38s cubic-bezier(.32,1,.32,1);max-height:85vh;overflow:hidden;display:flex;flex-direction:column}
+    .config-panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:360px;max-width:100vw;background:#181c27;border:1px solid #2a2f45;border-radius:24px 24px 0 0;z-index:200;transition:transform .38s cubic-bezier(.32,1,.32,1);max-height:88vh;overflow:hidden;display:flex;flex-direction:column}
     .config-panel.open{transform:translateX(-50%) translateY(0)}
-    .panel-handle{display:flex;flex-direction:column;align-items:center;padding:14px 22px 10px;cursor:pointer;flex-shrink:0}
+    .panel-handle{display:flex;flex-direction:column;align-items:center;padding:14px 22px 10px;cursor:pointer;flex-shrink:0;border-bottom:1px solid #1e2335}
     .panel-handle-bar{width:36px;height:4px;border-radius:2px;background:#2a2f45;margin-bottom:10px}
     .panel-handle-title{font-size:12px;font-weight:700;color:#e8eaf6;letter-spacing:.05em}
     .panel-handle-sub{font-size:10px;color:#6b7280;font-family:'DM Mono',monospace;margin-top:2px}
-    .panel-scroll{overflow-y:auto;padding:4px 22px 32px;flex:1}
+    .panel-scroll{overflow-y:auto;padding:6px 20px 32px;flex:1}
     .panel-scroll::-webkit-scrollbar{width:4px}
     .panel-scroll::-webkit-scrollbar-thumb{background:#2a2f45;border-radius:2px}
-    .section-label{font-size:9px;color:#3a4060;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;margin-top:16px}
-    .num-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-    .num-control{background:#1e2335;border:1px solid #2a2f45;border-radius:14px;padding:11px 12px;display:flex;flex-direction:column;gap:8px}
-    .num-label{font-size:9px;color:#6b7280;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em}
-    .num-mid{display:flex;align-items:center;justify-content:space-between}
-    .num-value{font-size:18px;font-weight:800;color:#e8eaf6;font-family:'DM Mono',monospace}
-    .num-value small{font-size:10px;font-weight:400;color:#6b7280}
-    .num-btns{display:flex;gap:5px}
-    .num-btn{width:26px;height:26px;border-radius:8px;border:1px solid #2a2f45;background:#252a3d;color:#e8eaf6;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-    .num-btn:hover{border-color:#f97316;color:#f97316}
-    .chips-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+    .section-label{font-size:9px;color:#3a4060;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;margin-top:18px}
+    .ctrl-block{background:#1e2335;border:1px solid #2a2f45;border-radius:16px;padding:15px 16px;margin-bottom:4px}
+    .ctrl-big{font-size:36px;font-weight:800;color:#e8eaf6;font-family:'DM Mono',monospace;line-height:1;letter-spacing:-1px;margin-bottom:12px}
+    .ctrl-big small{font-size:14px;font-weight:400;color:#6b7280;letter-spacing:0;margin-left:2px}
+    .presets{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap}
+    .preset{padding:4px 11px;border-radius:8px;border:1px solid #2a2f45;background:#252a3d;color:#6b7280;font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;font-family:'DM Mono',monospace}
+    .preset:hover{border-color:rgba(249,115,22,.4);color:#f97316}
+    .preset.active{background:rgba(249,115,22,.15);border-color:rgba(249,115,22,.55);color:#f97316;box-shadow:0 0 8px rgba(249,115,22,.1)}
+    .time-presets{display:flex;gap:5px;margin-bottom:12px}
+    .tpreset{flex:1;padding:7px 2px;border-radius:9px;border:1px solid #2a2f45;background:#252a3d;color:#6b7280;font-size:10px;font-weight:700;cursor:pointer;transition:all .18s;font-family:'DM Mono',monospace;text-align:center;line-height:1.3}
+    .tpreset span{display:block;font-size:7px;color:#3a4060;font-weight:400;margin-top:1px}
+    .tpreset:hover{border-color:rgba(99,102,241,.4);color:#818cf8}
+    .tpreset.active{background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.45);color:#818cf8}
+    .slider-wrap{position:relative;height:34px;display:flex;align-items:center}
+    .slider-track{position:absolute;left:0;right:0;height:4px;background:#2a2f45;border-radius:4px}
+    .slider-fill{height:100%;border-radius:4px}
+    .slider-fill.orange{background:linear-gradient(90deg,#dc2626,#f97316)}
+    .slider-fill.blue{background:linear-gradient(90deg,#4f46e5,#6366f1)}
+    input[type=range]{position:relative;z-index:2;width:100%;height:4px;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;margin:0}
+    input[type=range].orange::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#f97316,#dc2626);border:3px solid #181c27;box-shadow:0 0 0 2px rgba(249,115,22,.4),0 3px 8px rgba(249,115,22,.3);cursor:grab;transition:transform .15s}
+    input[type=range].orange:active::-webkit-slider-thumb{cursor:grabbing;transform:scale(1.25)}
+    input[type=range].blue::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#4f46e5);border:3px solid #181c27;box-shadow:0 0 0 2px rgba(99,102,241,.4),0 3px 8px rgba(99,102,241,.3);cursor:grab;transition:transform .15s}
+    input[type=range].blue:active::-webkit-slider-thumb{cursor:grabbing;transform:scale(1.25)}
+    input[type=range].orange::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#f97316,#dc2626);border:3px solid #181c27;cursor:grab}
+    input[type=range].blue::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#4f46e5);border:3px solid #181c27;cursor:grab}
+    .slider-limits{display:flex;justify-content:space-between;margin-top:4px}
+    .slider-limit{font-size:9px;color:#2a2f45;font-family:'DM Mono',monospace}
+    .weight-row{background:#1e2335;border:1px solid #2a2f45;border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+    .weight-left .wlabel{font-size:9px;color:#6b7280;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.08em}
+    .weight-left .wval{font-size:20px;font-weight:800;color:#e8eaf6;font-family:'DM Mono',monospace}
+    .weight-left .wval small{font-size:10px;font-weight:400;color:#6b7280}
+    .wbtns{display:flex;gap:6px}
+    .wbtn{width:30px;height:30px;border-radius:9px;border:1px solid #2a2f45;background:#252a3d;color:#e8eaf6;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+    .wbtn:hover{border-color:#f97316;color:#f97316}
+    .divider{height:1px;background:linear-gradient(90deg,transparent,#2a2f45,transparent);margin:4px 0 0}
+    .chips-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
     .chip{padding:5px 10px;border-radius:10px;border:1px solid #2a2f45;background:#1e2335;color:#6b7280;font-size:10px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
     .chip.active{background:rgba(249,115,22,.15);border-color:rgba(249,115,22,.5);color:#f97316}
     .sel-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
@@ -473,7 +577,6 @@ class XiaomiAirFryerCard extends HTMLElement {
     .seg-btn{flex:1;padding:7px 4px;background:#1e2335;color:#6b7280;font-size:9px;font-weight:600;font-family:'Syne',sans-serif;border:none;cursor:pointer;transition:all .2s;border-right:1px solid #2a2f45;text-align:center}
     .seg-btn:last-child{border-right:none}
     .seg-btn.active{background:rgba(249,115,22,.15);color:#f97316}
-    .divider{height:1px;background:linear-gradient(90deg,transparent,#2a2f45,transparent);margin:14px 0 0}
     .toggles-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
     .toggle-card{background:#1e2335;border:1px solid #2a2f45;border-radius:12px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all .2s}
     .toggle-card.on{border-color:rgba(249,115,22,.35);background:rgba(249,115,22,.06)}
