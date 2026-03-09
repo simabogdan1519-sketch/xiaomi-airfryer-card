@@ -2,7 +2,7 @@
 
 A custom Home Assistant card for the **Xiaomi Smart Air Fryer MAF10A** (`careli.fryer.maf10a`).
 
-
+![preview](preview.jpg)
 
 ---
 
