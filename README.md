@@ -1,6 +1,6 @@
 # Xiaomi Air Fryer – Lovelace Card
 
-A custom Home Assistant card for the **Xiaomi Smart Air Fryer MAF10A** (`careli.fryer.maf10a`), built on top of the [XiaomiAirFryer](https://github.com/tsunglung/XiaomiAirFryer) integration.
+A custom Home Assistant card for the **Xiaomi Smart Air Fryer MAF10A** (`careli.fryer.maf10a`).
 
 
 
@@ -12,13 +12,6 @@ The card gives you a visual overview of your air fryer at a glance — current t
 
 Everything is wired directly to Home Assistant — no polling, no scripts, no helpers needed.
 
----
-
-## Requirements
-
-- Home Assistant 2023.1 or newer
-- [XiaomiAirFryer](https://github.com/tsunglung/XiaomiAirFryer) integration installed and configured
-- [HACS](https://hacs.xyz/) for the easiest install path
 
 ---
 
@@ -106,12 +99,9 @@ The card auto-discovers all entities based on the `device` prefix you provide:
 
 Tested with:
 - Xiaomi Smart Air Fryer MAF10A (`careli.fryer.maf10a`)
-- XiaomiAirFryer integration via local LAN polling
 
 Other careli fryer models may work if their entity structure matches.
 
----
 
-## License
 
 MIT
