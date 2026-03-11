@@ -3,50 +3,180 @@
  *
  * type: custom:xiaomi-airfryer-card
  * device: careli_maf10a_1c99
+ * language: en   # en | ro | de | fr | es | it | nl  (default: en)
  */
 
 class XiaomiAirFryerCard extends HTMLElement {
 
+  // ── i18n ────────────────────────────────────────────────────
+  static get _i18n() { return {
+    en: {
+      title: 'Air Fryer Xiaomi', sub: 'kitchen · MAF10A',
+      status: { idle:'⏸ Standby', cooking:'🔥 Cooking', pause:'⏸ Paused',
+                preheat:'🌡 Preheating', keep_warm:'♨️ Keep Warm',
+                appointment:'⏰ Scheduled', fault:'⚠️ Fault', unavailable:'● Offline' },
+      temp: 'Temperature', time: 'Cook time', weight: 'Weight',
+      preset_temp: 'Quick presets', preset_time: 'Quick presets',
+      program: 'Cooking program', texture: 'Texture', quantity: 'Quantity',
+      turn_pot: 'Turn basket', no_turn: 'Not needed', need_turn: '🔄 Turn',
+      settings: 'Settings', preheat_sw: 'Preheat', auto_warm: 'Auto Warm',
+      keep_warm_sw: 'Keep Warm', turn_cfg: 'Turn Pot Cfg',
+      config_title: '⚙ Air Fryer Settings', click_hint: '⚙ tap to configure',
+      set: 'Set', duration: 'Duration',
+      prog_label: 'Cooking progress', min_left: 'min left',
+      start: '▶ Start', pause_btn: '⏸', resume: '▷▷', stop: '⏹',
+      tex: { NONE:'—', 'Crispy Roast':'Crispy', 'Tender Roast':'Tender', 'Degrease':'Degrease' },
+      qty: { NULL:'—', 'One Layer':'1 Layer', 'Double Layer':'2 Layers', 'Half Pot':'½ Pot', 'Full Pot':'Full' },
+    },
+    ro: {
+      title: 'Air Fryer Xiaomi', sub: 'bucătărie · MAF10A',
+      status: { idle:'⏸ Standby', cooking:'🔥 Gătire', pause:'⏸ Pauză',
+                preheat:'🌡 Preîncălzire', keep_warm:'♨️ Keep Warm',
+                appointment:'⏰ Programat', fault:'⚠️ Eroare', unavailable:'● Offline' },
+      temp: 'Temperatură', time: 'Timp gătire', weight: 'Greutate',
+      preset_temp: 'Preseturi rapide', preset_time: 'Preseturi rapide',
+      program: 'Program gătire', texture: 'Textură', quantity: 'Cantitate',
+      turn_pot: 'Întoarce coșul', no_turn: 'Nu e nevoie', need_turn: '🔄 Întoarce',
+      settings: 'Setări', preheat_sw: 'Preîncălzire', auto_warm: 'Auto Warm',
+      keep_warm_sw: 'Keep Warm', turn_cfg: 'Turn Pot Cfg',
+      config_title: '⚙ Configurare Air Fryer', click_hint: '⚙ atinge pentru configurare',
+      set: 'Setată', duration: 'Durată',
+      prog_label: 'Progres gătire', min_left: 'min rămași',
+      start: '▶ Start Cook', pause_btn: '⏸', resume: '▷▷', stop: '⏹',
+      tex: { NONE:'—', 'Crispy Roast':'Crispy', 'Tender Roast':'Tender', 'Degrease':'Degrease' },
+      qty: { NULL:'—', 'One Layer':'1 Strat', 'Double Layer':'2 Straturi', 'Half Pot':'½ Coș', 'Full Pot':'Plin' },
+    },
+    de: {
+      title: 'Xiaomi Heißluftfritteuse', sub: 'Küche · MAF10A',
+      status: { idle:'⏸ Bereit', cooking:'🔥 Garen', pause:'⏸ Pause',
+                preheat:'🌡 Vorheizen', keep_warm:'♨️ Warmhalten',
+                appointment:'⏰ Geplant', fault:'⚠️ Fehler', unavailable:'● Offline' },
+      temp: 'Temperatur', time: 'Garzeit', weight: 'Gewicht',
+      preset_temp: 'Schnellwahl', preset_time: 'Schnellwahl',
+      program: 'Garprogramm', texture: 'Textur', quantity: 'Menge',
+      turn_pot: 'Korb wenden', no_turn: 'Nicht nötig', need_turn: '🔄 Wenden',
+      settings: 'Einstellungen', preheat_sw: 'Vorheizen', auto_warm: 'Auto Warm',
+      keep_warm_sw: 'Warmhalten', turn_cfg: 'Korb-Konfig',
+      config_title: '⚙ Fritteuse einstellen', click_hint: '⚙ tippen zum Einstellen',
+      set: 'Eingestellt', duration: 'Dauer',
+      prog_label: 'Garfortschritt', min_left: 'Min verbleibend',
+      start: '▶ Starten', pause_btn: '⏸', resume: '▷▷', stop: '⏹',
+      tex: { NONE:'—', 'Crispy Roast':'Knusprig', 'Tender Roast':'Zart', 'Degrease':'Entfetten' },
+      qty: { NULL:'—', 'One Layer':'1 Lage', 'Double Layer':'2 Lagen', 'Half Pot':'½ Korb', 'Full Pot':'Voll' },
+    },
+    fr: {
+      title: 'Friteuse à air Xiaomi', sub: 'cuisine · MAF10A',
+      status: { idle:'⏸ Veille', cooking:'🔥 Cuisson', pause:'⏸ Pause',
+                preheat:'🌡 Préchauffage', keep_warm:'♨️ Maintien chaud',
+                appointment:'⏰ Programmé', fault:'⚠️ Erreur', unavailable:'● Hors ligne' },
+      temp: 'Température', time: 'Durée de cuisson', weight: 'Poids',
+      preset_temp: 'Préréglages', preset_time: 'Préréglages',
+      program: 'Programme', texture: 'Texture', quantity: 'Quantité',
+      turn_pot: 'Retourner le panier', no_turn: 'Inutile', need_turn: '🔄 Retourner',
+      settings: 'Paramètres', preheat_sw: 'Préchauffage', auto_warm: 'Auto Chaud',
+      keep_warm_sw: 'Maintien chaud', turn_cfg: 'Config panier',
+      config_title: '⚙ Réglages friteuse', click_hint: '⚙ toucher pour régler',
+      set: 'Réglée', duration: 'Durée',
+      prog_label: 'Progression', min_left: 'min restantes',
+      start: '▶ Démarrer', pause_btn: '⏸', resume: '▷▷', stop: '⏹',
+      tex: { NONE:'—', 'Crispy Roast':'Croustillant', 'Tender Roast':'Tendre', 'Degrease':'Dégraissage' },
+      qty: { NULL:'—', 'One Layer':'1 couche', 'Double Layer':'2 couches', 'Half Pot':'½ panier', 'Full Pot':'Plein' },
+    },
+    es: {
+      title: 'Freidora de aire Xiaomi', sub: 'cocina · MAF10A',
+      status: { idle:'⏸ En espera', cooking:'🔥 Cocinando', pause:'⏸ Pausa',
+                preheat:'🌡 Precalentando', keep_warm:'♨️ Manteniendo calor',
+                appointment:'⏰ Programado', fault:'⚠️ Error', unavailable:'● Sin conexión' },
+      temp: 'Temperatura', time: 'Tiempo de cocción', weight: 'Peso',
+      preset_temp: 'Ajustes rápidos', preset_time: 'Ajustes rápidos',
+      program: 'Programa', texture: 'Textura', quantity: 'Cantidad',
+      turn_pot: 'Girar cesta', no_turn: 'No necesario', need_turn: '🔄 Girar',
+      settings: 'Ajustes', preheat_sw: 'Precalentar', auto_warm: 'Auto Calor',
+      keep_warm_sw: 'Mantener calor', turn_cfg: 'Config cesta',
+      config_title: '⚙ Configurar freidora', click_hint: '⚙ toca para configurar',
+      set: 'Fijada', duration: 'Duración',
+      prog_label: 'Progreso cocción', min_left: 'min restantes',
+      start: '▶ Iniciar', pause_btn: '⏸', resume: '▷▷', stop: '⏹',
+      tex: { NONE:'—', 'Crispy Roast':'Crujiente', 'Tender Roast':'Tierno', 'Degrease':'Desengrasado' },
+      qty: { NULL:'—', 'One Layer':'1 capa', 'Double Layer':'2 capas', 'Half Pot':'½ cesta', 'Full Pot':'Llena' },
+    },
+    it: {
+      title: 'Friggitrice ad aria Xiaomi', sub: 'cucina · MAF10A',
+      status: { idle:'⏸ In attesa', cooking:'🔥 Cottura', pause:'⏸ Pausa',
+                preheat:'🌡 Preriscaldo', keep_warm:'♨️ Mantieni caldo',
+                appointment:'⏰ Programmato', fault:'⚠️ Errore', unavailable:'● Non in linea' },
+      temp: 'Temperatura', time: 'Tempo di cottura', weight: 'Peso',
+      preset_temp: 'Preimpostazioni', preset_time: 'Preimpostazioni',
+      program: 'Programma', texture: 'Consistenza', quantity: 'Quantità',
+      turn_pot: 'Girare cestello', no_turn: 'Non necessario', need_turn: '🔄 Girare',
+      settings: 'Impostazioni', preheat_sw: 'Preriscaldo', auto_warm: 'Auto caldo',
+      keep_warm_sw: 'Mantieni caldo', turn_cfg: 'Config cestello',
+      config_title: '⚙ Impostazioni friggitrice', click_hint: '⚙ tocca per configurare',
+      set: 'Impostata', duration: 'Durata',
+      prog_label: 'Avanzamento cottura', min_left: 'min rimanenti',
+      start: '▶ Avvia', pause_btn: '⏸', resume: '▷▷', stop: '⏹',
+      tex: { NONE:'—', 'Crispy Roast':'Croccante', 'Tender Roast':'Tenero', 'Degrease':'Sgrassaggio' },
+      qty: { NULL:'—', 'One Layer':'1 strato', 'Double Layer':'2 strati', 'Half Pot':'½ cestello', 'Full Pot':'Pieno' },
+    },
+    nl: {
+      title: 'Xiaomi Airfryer', sub: 'keuken · MAF10A',
+      status: { idle:'⏸ Stand-by', cooking:'🔥 Aan het bakken', pause:'⏸ Gepauzeerd',
+                preheat:'🌡 Voorverwarmen', keep_warm:'♨️ Warmhouden',
+                appointment:'⏰ Gepland', fault:'⚠️ Fout', unavailable:'● Offline' },
+      temp: 'Temperatuur', time: 'Baktijd', weight: 'Gewicht',
+      preset_temp: 'Snelle keuze', preset_time: 'Snelle keuze',
+      program: 'Bakprogramma', texture: 'Textuur', quantity: 'Hoeveelheid',
+      turn_pot: 'Mand draaien', no_turn: 'Niet nodig', need_turn: '🔄 Draaien',
+      settings: 'Instellingen', preheat_sw: 'Voorverwarmen', auto_warm: 'Auto Warm',
+      keep_warm_sw: 'Warmhouden', turn_cfg: 'Mand instelling',
+      config_title: '⚙ Airfryer instellen', click_hint: '⚙ tik om in te stellen',
+      set: 'Ingesteld', duration: 'Duur',
+      prog_label: 'Voortgang', min_left: 'min resterend',
+      start: '▶ Starten', pause_btn: '⏸', resume: '▷▷', stop: '⏹',
+      tex: { NONE:'—', 'Crispy Roast':'Knapperig', 'Tender Roast':'Mals', 'Degrease':'Ontvet' },
+      qty: { NULL:'—', 'One Layer':'1 laag', 'Double Layer':'2 lagen', 'Half Pot':'½ mand', 'Full Pot':'Vol' },
+    },
+  }; }
+
+  // ── Lifecycle ────────────────────────────────────────────────
   setConfig(config) {
-    if (!config.device) throw new Error('Specifică "device: <prefix_entitate>" ex: careli_maf10a_1c99');
-    this._config = config;
-    this._device = config.device;
+    if (!config.device) throw new Error('Specify "device: <entity_prefix>" e.g. careli_maf10a_1c99');
+    this._config  = config;
+    this._device  = config.device;
+    this._lang    = XiaomiAirFryerCard._i18n[config.language] ? config.language : 'en';
+    this._t       = XiaomiAirFryerCard._i18n[this._lang];
     this._panelOpen = false;
-    this._built = false;
+    this._built     = false;
   }
 
   set hass(hass) {
     this._hass = hass;
-    if (!this._built) {
-      this._build();
-      this._built = true;
-    }
+    if (!this._built) { this._build(); this._built = true; }
     this._update();
   }
 
   getCardSize() { return 6; }
 
-  // ── Entity helpers ──────────────────────────────────────────
+  // ── Entity helpers ───────────────────────────────────────────
   _s(suffix)   { return this._hass?.states[`sensor.${this._device}_${suffix}`]?.state  ?? 'unavailable'; }
   _n(suffix)   { return this._hass?.states[`number.${this._device}_${suffix}`]?.state  ?? 'unavailable'; }
   _sel(suffix) { return this._hass?.states[`select.${this._device}_${suffix}`]?.state  ?? 'unavailable'; }
   _sw(suffix)  { return this._hass?.states[`switch.${this._device}_${suffix}`]?.state  ?? 'unavailable'; }
 
   _call(domain, service, suffix, extra = {}) {
-    const eid = `${domain}.${this._device}_${suffix}`;
-    this._hass.callService(domain, service, { entity_id: eid, ...extra });
+    this._hass.callService(domain, service, { entity_id: `${domain}.${this._device}_${suffix}`, ...extra });
   }
   _pressButton(suffix)          { this._call('button',  'press',         suffix); }
   _setNumber(suffix, value)     { this._call('number',  'set_value',     suffix, { value }); }
   _selectOption(suffix, option) { this._call('select',  'select_option', suffix, { option }); }
   _toggleSwitch(suffix) {
-    const eid = `switch.${this._device}_${suffix}`;
-    this._hass.callService('homeassistant', 'toggle', { entity_id: eid });
+    this._hass.callService('homeassistant', 'toggle', { entity_id: `switch.${this._device}_${suffix}` });
   }
 
-  // ── Update ──────────────────────────────────────────────────
+  // ── Update ───────────────────────────────────────────────────
   _update() {
     if (!this._hass || !this._built) return;
+    const t = this._t;
 
     const status  = this._s('air_fryer');
     const left    = this._s('left_time');
@@ -62,64 +192,53 @@ class XiaomiAirFryerCard extends HTMLElement {
     const curWrm  = this._sw('current_keep_warm');
     const turnCfg = this._sw('turn_pot_config');
 
-    const totalMin = parseFloat(time)  || 20;
-    const leftMin  = parseFloat(left)  || 0;
+    const totalMin = parseFloat(time) || 20;
+    const leftMin  = parseFloat(left) || 0;
     const pct      = totalMin > 0 ? Math.round(((totalMin - leftMin) / totalMin) * 100) : 0;
     const isActive = ['cooking','preheat','keep_warm'].includes(status?.toLowerCase?.());
 
-    this._q('#statusText').textContent = this._statusLabel(status);
+    const statusKey = status?.toLowerCase?.().replace(' ','_');
+    this._q('#statusText').textContent = t.status[statusKey] ?? t.status[status] ?? status ?? '—';
     this._q('#statusBadge').className  = 'status-badge ' + (isActive ? 'active' : 'idle');
 
     if (temp !== 'unavailable') {
       const tv = parseFloat(temp);
-      this._q('#lcdTemp').textContent  = tv + '°C';
+      this._q('#lcdTemp').textContent = tv + '°C';
       this._q('#statTemp').textContent = tv + '°';
-      // slider + display (only if panel not being dragged)
       if (!this._draggingTemp) {
         this._q('#tempDisplay').innerHTML = tv + ' <small>°C</small>';
-        this._q('#tempSlider').value      = tv;
-        this._q('#tempFill').style.width  = this._pct(tv, 40, 230);
-        this._shadowAll('#tempPresets .preset').forEach(p =>
-          p.classList.toggle('active', parseInt(p.dataset.val) === tv)
-        );
+        this._q('#tempSlider').value = tv;
+        this._q('#tempFill').style.width = this._pct(tv, 40, 230);
+        this._all('#tempPresets .preset').forEach(p => p.classList.toggle('active', parseInt(p.dataset.val) === tv));
       }
     }
     if (left !== 'unavailable') {
       this._q('#lcdTime').textContent   = leftMin + ' min';
       this._q('#statLeft').textContent  = leftMin;
-      this._q('#progLabel').textContent = `⏱ ${leftMin} min rămași`;
+      this._q('#progLabel').textContent = `⏱ ${leftMin} ${t.min_left}`;
       this._q('#progFill').style.width  = pct + '%';
     }
     if (time !== 'unavailable') {
       const tv = parseFloat(time);
       if (!this._draggingTime) {
         this._q('#timeDisplay').innerHTML = tv + ' <small>min</small>';
-        this._q('#timeSlider').value      = tv;
-        this._q('#timeFill').style.width  = this._pct(tv, 1, 120);
-        this._shadowAll('#timePresets .tpreset').forEach(p =>
-          p.classList.toggle('active', parseInt(p.dataset.val) === tv)
-        );
+        this._q('#timeSlider').value = tv;
+        this._q('#timeFill').style.width = this._pct(tv, 1, 120);
+        this._all('#timePresets .tpreset').forEach(p => p.classList.toggle('active', parseInt(p.dataset.val) === tv));
       }
     }
     if (weight !== 'unavailable') {
-      this._q('#statWeight').textContent = parseFloat(weight) + 'g';
-      this._q('#weightDisplay').innerHTML = parseFloat(weight) + ' <small>g</small>';
+      const wv = parseFloat(weight);
+      this._q('#statWeight').textContent   = wv + 'g';
+      this._q('#weightDisplay').innerHTML  = wv + ' <small>g</small>';
     }
 
     this._q('#led2').classList.toggle('on', isActive);
 
-    this._shadowAll('.chip[data-group="mode"]').forEach(c =>
-      c.classList.toggle('active', c.dataset.val === mode)
-    );
-    this._shadowAll('.seg-btn[data-group="texture"]').forEach(b =>
-      b.classList.toggle('active', b.dataset.val === texture)
-    );
-    this._shadowAll('.seg-btn[data-group="measure"]').forEach(b =>
-      b.classList.toggle('active', b.dataset.val === measure)
-    );
-    this._shadowAll('.seg-btn[data-group="turnpot"]').forEach(b =>
-      b.classList.toggle('active', b.dataset.val === turnPot)
-    );
+    this._all('.chip[data-group="mode"]').forEach(c => c.classList.toggle('active', c.dataset.val === mode));
+    this._all('.seg-btn[data-group="texture"]').forEach(b => b.classList.toggle('active', b.dataset.val === texture));
+    this._all('.seg-btn[data-group="measure"]').forEach(b => b.classList.toggle('active', b.dataset.val === measure));
+    this._all('.seg-btn[data-group="turnpot"]').forEach(b => b.classList.toggle('active', b.dataset.val === turnPot));
 
     this._tog('#togglePreheat', preheat === 'on');
     this._tog('#toggleAutoWrm', autoWrm === 'on');
@@ -127,21 +246,12 @@ class XiaomiAirFryerCard extends HTMLElement {
     this._tog('#toggleTurnCfg', turnCfg === 'on');
   }
 
-  _statusLabel(s) {
-    const map = {
-      'idle':'⏸ Standby','cooking':'🔥 Gătire','pause':'⏸ Pauză',
-      'preheat':'🌡 Preîncălzire','keep_warm':'♨️ Keep Warm',
-      'appointment':'⏰ Programat','fault':'⚠️ Eroare','unavailable':'● Offline',
-    };
-    return map[s?.toLowerCase?.()] ?? s ?? '—';
-  }
-
   _pct(val, min, max) { return ((val - min) / (max - min) * 100).toFixed(1) + '%'; }
   _q(sel)   { return this.shadowRoot.querySelector(sel); }
-  _shadowAll(sel) { return [...this.shadowRoot.querySelectorAll(sel)]; }
+  _all(sel) { return [...this.shadowRoot.querySelectorAll(sel)]; }
   _tog(sel, on) { this._q(sel)?.classList.toggle('on', on); }
 
-  // ── Build DOM ───────────────────────────────────────────────
+  // ── Build ────────────────────────────────────────────────────
   _build() {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `<style>${this._css()}</style>${this._html()}`;
@@ -151,100 +261,77 @@ class XiaomiAirFryerCard extends HTMLElement {
   }
 
   _attachEvents() {
-    // panel open/close
+    const t = this._t;
     this._q('#modelClick').addEventListener('click', () => this._togglePanel());
     this._q('#overlay').addEventListener('click',    () => this._closePanel());
     this._q('#panelHandle').addEventListener('click',() => this._closePanel());
 
-    // cook buttons
     this._q('#btnStart').addEventListener('click',  () => this._pressButton('start_cook'));
     this._q('#btnPause').addEventListener('click',  () => this._pressButton('pause'));
     this._q('#btnResume').addEventListener('click', () => this._pressButton('resume_cook'));
     this._q('#btnStop').addEventListener('click',   () => this._pressButton('cancel_cooking'));
 
-    // ── TEMP SLIDER ──
-    const tempSlider = this._q('#tempSlider');
-    tempSlider.addEventListener('mousedown', () => this._draggingTemp = true);
-    tempSlider.addEventListener('touchstart', () => this._draggingTemp = true);
-    tempSlider.addEventListener('mouseup',   () => { this._draggingTemp = false; this._setNumber('target_temperature', parseInt(tempSlider.value)); });
-    tempSlider.addEventListener('touchend',  () => { this._draggingTemp = false; this._setNumber('target_temperature', parseInt(tempSlider.value)); });
-    tempSlider.addEventListener('input', () => {
-      const v = parseInt(tempSlider.value);
+    // temp slider
+    const ts = this._q('#tempSlider');
+    ts.addEventListener('mousedown',  () => this._draggingTemp = true);
+    ts.addEventListener('touchstart', () => this._draggingTemp = true, { passive: true });
+    ts.addEventListener('mouseup',    () => { this._draggingTemp = false; this._setNumber('target_temperature', parseInt(ts.value)); });
+    ts.addEventListener('touchend',   () => { this._draggingTemp = false; this._setNumber('target_temperature', parseInt(ts.value)); });
+    ts.addEventListener('input', () => {
+      const v = parseInt(ts.value);
       this._q('#tempDisplay').innerHTML = v + ' <small>°C</small>';
       this._q('#tempFill').style.width  = this._pct(v, 40, 230);
       this._q('#lcdTemp').textContent   = v + '°C';
-      this._shadowAll('#tempPresets .preset').forEach(p =>
-        p.classList.toggle('active', parseInt(p.dataset.val) === v)
-      );
+      this._all('#tempPresets .preset').forEach(p => p.classList.toggle('active', parseInt(p.dataset.val) === v));
     });
-
-    // TEMP PRESETS
-    this._shadowAll('#tempPresets .preset').forEach(p => {
+    this._all('#tempPresets .preset').forEach(p => {
       p.addEventListener('click', () => {
         const v = parseInt(p.dataset.val);
-        this._q('#tempSlider').value     = v;
+        ts.value = v;
         this._q('#tempDisplay').innerHTML = v + ' <small>°C</small>';
         this._q('#tempFill').style.width  = this._pct(v, 40, 230);
         this._q('#lcdTemp').textContent   = v + '°C';
-        this._shadowAll('#tempPresets .preset').forEach(x => x.classList.remove('active'));
+        this._all('#tempPresets .preset').forEach(x => x.classList.remove('active'));
         p.classList.add('active');
         this._setNumber('target_temperature', v);
       });
     });
 
-    // ── TIME SLIDER ──
-    const timeSlider = this._q('#timeSlider');
-    timeSlider.addEventListener('mousedown', () => this._draggingTime = true);
-    timeSlider.addEventListener('touchstart', () => this._draggingTime = true);
-    timeSlider.addEventListener('mouseup',   () => { this._draggingTime = false; this._setNumber('target_time', parseInt(timeSlider.value)); });
-    timeSlider.addEventListener('touchend',  () => { this._draggingTime = false; this._setNumber('target_time', parseInt(timeSlider.value)); });
-    timeSlider.addEventListener('input', () => {
-      const v = parseInt(timeSlider.value);
+    // time slider
+    const tms = this._q('#timeSlider');
+    tms.addEventListener('mousedown',  () => this._draggingTime = true);
+    tms.addEventListener('touchstart', () => this._draggingTime = true, { passive: true });
+    tms.addEventListener('mouseup',    () => { this._draggingTime = false; this._setNumber('target_time', parseInt(tms.value)); });
+    tms.addEventListener('touchend',   () => { this._draggingTime = false; this._setNumber('target_time', parseInt(tms.value)); });
+    tms.addEventListener('input', () => {
+      const v = parseInt(tms.value);
       this._q('#timeDisplay').innerHTML = v + ' <small>min</small>';
       this._q('#timeFill').style.width  = this._pct(v, 1, 120);
       this._q('#lcdTime').textContent   = v + ' min';
-      this._shadowAll('#timePresets .tpreset').forEach(p =>
-        p.classList.toggle('active', parseInt(p.dataset.val) === v)
-      );
+      this._all('#timePresets .tpreset').forEach(p => p.classList.toggle('active', parseInt(p.dataset.val) === v));
     });
-
-    // TIME PRESETS
-    this._shadowAll('#timePresets .tpreset').forEach(p => {
+    this._all('#timePresets .tpreset').forEach(p => {
       p.addEventListener('click', () => {
         const v = parseInt(p.dataset.val);
-        this._q('#timeSlider').value      = v;
+        tms.value = v;
         this._q('#timeDisplay').innerHTML = v + ' <small>min</small>';
         this._q('#timeFill').style.width  = this._pct(v, 1, 120);
         this._q('#lcdTime').textContent   = v + ' min';
-        this._shadowAll('#timePresets .tpreset').forEach(x => x.classList.remove('active'));
+        this._all('#timePresets .tpreset').forEach(x => x.classList.remove('active'));
         p.classList.add('active');
         this._setNumber('target_time', v);
       });
     });
 
-    // WEIGHT +/-
-    this._q('#weightMinus').addEventListener('click', () => {
-      const v = parseFloat(this._n('cooking_weight')) || 100;
-      this._setNumber('cooking_weight', Math.max(100, v - 50));
-    });
-    this._q('#weightPlus').addEventListener('click', () => {
-      const v = parseFloat(this._n('cooking_weight')) || 100;
-      this._setNumber('cooking_weight', Math.min(1800, v + 50));
-    });
+    // weight
+    this._q('#weightMinus').addEventListener('click', () => this._setNumber('cooking_weight', Math.max(100,  parseFloat(this._n('cooking_weight')) - 50)));
+    this._q('#weightPlus').addEventListener('click',  () => this._setNumber('cooking_weight', Math.min(1800, parseFloat(this._n('cooking_weight')) + 50)));
 
-    // mode chips
-    this._shadowAll('.chip[data-group="mode"]').forEach(c =>
-      c.addEventListener('click', () => this._selectOption('mode', c.dataset.val))
-    );
-    this._shadowAll('.seg-btn[data-group="texture"]').forEach(b =>
-      b.addEventListener('click', () => this._selectOption('texture', b.dataset.val))
-    );
-    this._shadowAll('.seg-btn[data-group="measure"]').forEach(b =>
-      b.addEventListener('click', () => this._selectOption('target_cooking_measure', b.dataset.val))
-    );
-    this._shadowAll('.seg-btn[data-group="turnpot"]').forEach(b =>
-      b.addEventListener('click', () => this._selectOption('turn_pot', b.dataset.val))
-    );
+    // selects
+    this._all('.chip[data-group="mode"]').forEach(c => c.addEventListener('click', () => this._selectOption('mode', c.dataset.val)));
+    this._all('.seg-btn[data-group="texture"]').forEach(b => b.addEventListener('click', () => this._selectOption('texture', b.dataset.val)));
+    this._all('.seg-btn[data-group="measure"]').forEach(b => b.addEventListener('click', () => this._selectOption('target_cooking_measure', b.dataset.val)));
+    this._all('.seg-btn[data-group="turnpot"]').forEach(b => b.addEventListener('click', () => this._selectOption('turn_pot', b.dataset.val)));
 
     // toggles
     this._q('#togglePreheat').addEventListener('click', () => this._toggleSwitch('preheat'));
@@ -254,13 +341,13 @@ class XiaomiAirFryerCard extends HTMLElement {
   }
 
   _togglePanel() { this._panelOpen ? this._closePanel() : this._openPanel(); }
-  _openPanel()  { this._panelOpen = true;  this._q('#configPanel').classList.add('open');    this._q('#overlay').classList.add('visible'); }
-  _closePanel() { this._panelOpen = false; this._q('#configPanel').classList.remove('open'); this._q('#overlay').classList.remove('visible'); }
+  _openPanel()   { this._panelOpen = true;  this._q('#configPanel').classList.add('open');    this._q('#overlay').classList.add('visible'); }
+  _closePanel()  { this._panelOpen = false; this._q('#configPanel').classList.remove('open'); this._q('#overlay').classList.remove('visible'); }
 
   _buildMesh() {
     const mesh = this._q('#afMesh');
     for (let i = 0; i < 60; i++) { const c = document.createElement('div'); c.className = 'af-hole'; mesh.appendChild(c); }
-    setInterval(() => this._shadowAll('.af-hole').forEach(c => c.classList.toggle('hot', Math.random() > 0.52)), 500);
+    setInterval(() => this._all('.af-hole').forEach(c => c.classList.toggle('hot', Math.random() > 0.52)), 500);
   }
   _buildHeatWaves() {
     const heat = this._q('#afHeat');
@@ -271,18 +358,24 @@ class XiaomiAirFryerCard extends HTMLElement {
     }
   }
 
-  // ── HTML ────────────────────────────────────────────────────
-  _html() { return `
+  // ── HTML ─────────────────────────────────────────────────────
+  _html() {
+    const t = this._t;
+    const tex = Object.entries(t.tex).map(([v,l]) => `<div class="seg-btn" data-group="texture" data-val="${v}">${l}</div>`).join('');
+    const qty = Object.entries(t.qty).map(([v,l]) => `<div class="seg-btn" data-group="measure" data-val="${v}">${l}</div>`).join('');
+    const modes = [['French Fries','🍟'],['Chicken Wing','🍗'],['Steak','🥩'],['Lamb Chops','🐑'],['Fish','🐟'],['Shrimp','🍤'],['Vegetables','🥦'],['Cake','🎂'],['Pizza','🍕'],['Defrost','❄️'],['Dried Fruit','🍇'],['Yogurt','🫙'],['Manual','🎛']]
+      .map(([v,e]) => `<div class="chip" data-group="mode" data-val="${v}">${e} ${v}</div>`).join('');
+
+    return `
     <div class="card-wrap">
       <div class="ha-card af-card">
         <div class="card-main">
-
           <div class="card-header">
             <div class="header-left">
               <div class="header-icon">🍟</div>
               <div>
-                <div class="header-title">Air Fryer Xiaomi</div>
-                <div class="header-sub">bucătărie · MAF10A</div>
+                <div class="header-title">${t.title}</div>
+                <div class="header-sub">${t.sub}</div>
               </div>
             </div>
             <div class="status-badge idle" id="statusBadge">
@@ -314,28 +407,28 @@ class XiaomiAirFryerCard extends HTMLElement {
               </div>
               <div class="af-heat" id="afHeat"></div>
             </div>
-            <div class="click-hint">⚙ atinge pentru configurare</div>
+            <div class="click-hint">${t.click_hint}</div>
           </div>
 
           <div class="stats">
-            <div class="stat"><span class="stat-val" id="statTemp">—°</span><span class="stat-key">Temp.</span></div>
-            <div class="stat"><span class="stat-val" id="statLeft">—</span><span class="stat-key">Min răm.</span></div>
-            <div class="stat"><span class="stat-val" id="statWeight">—g</span><span class="stat-key">Greutate</span></div>
+            <div class="stat"><span class="stat-val" id="statTemp">—°</span><span class="stat-key">${t.temp}</span></div>
+            <div class="stat"><span class="stat-val" id="statLeft">—</span><span class="stat-key">${t.min_left}</span></div>
+            <div class="stat"><span class="stat-val" id="statWeight">—g</span><span class="stat-key">${t.weight}</span></div>
           </div>
 
           <div class="progress-section">
             <div class="prog-header">
-              <span class="prog-label">Progres gătire</span>
-              <span class="prog-time" id="progLabel">⏱ — min rămași</span>
+              <span class="prog-label">${t.prog_label}</span>
+              <span class="prog-time" id="progLabel">⏱ — ${t.min_left}</span>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
           </div>
 
           <div class="main-controls">
-            <button class="btn btn-start"  id="btnStart">▶ Start Cook</button>
-            <button class="btn btn-pause"  id="btnPause">⏸</button>
-            <button class="btn btn-resume" id="btnResume">▷▷</button>
-            <button class="btn btn-stop"   id="btnStop">⏹</button>
+            <button class="btn btn-start"  id="btnStart">${t.start}</button>
+            <button class="btn btn-pause"  id="btnPause">${t.pause_btn}</button>
+            <button class="btn btn-resume" id="btnResume">${t.resume}</button>
+            <button class="btn btn-stop"   id="btnStop">${t.stop}</button>
           </div>
         </div>
       </div>
@@ -345,13 +438,12 @@ class XiaomiAirFryerCard extends HTMLElement {
       <div class="config-panel" id="configPanel">
         <div class="panel-handle" id="panelHandle">
           <div class="panel-handle-bar"></div>
-          <div class="panel-handle-title">⚙ Configurare Air Fryer</div>
+          <div class="panel-handle-title">${t.config_title}</div>
           <div class="panel-handle-sub">${this._device}</div>
         </div>
         <div class="panel-scroll">
 
-          <!-- TEMP -->
-          <div class="section-label">Temperatură țintă</div>
+          <div class="section-label">${t.temp}</div>
           <div class="ctrl-block">
             <div class="ctrl-big" id="tempDisplay">— <small>°C</small></div>
             <div class="presets" id="tempPresets">
@@ -369,8 +461,7 @@ class XiaomiAirFryerCard extends HTMLElement {
             <div class="slider-limits"><span class="slider-limit">40°C</span><span class="slider-limit">230°C</span></div>
           </div>
 
-          <!-- TIMP -->
-          <div class="section-label">Timp gătire</div>
+          <div class="section-label">${t.time}</div>
           <div class="ctrl-block">
             <div class="ctrl-big" id="timeDisplay">— <small>min</small></div>
             <div class="time-presets" id="timePresets">
@@ -389,8 +480,7 @@ class XiaomiAirFryerCard extends HTMLElement {
             <div class="slider-limits"><span class="slider-limit">1 min</span><span class="slider-limit">120 min</span></div>
           </div>
 
-          <!-- GREUTATE -->
-          <div class="section-label">Greutate</div>
+          <div class="section-label">${t.weight}</div>
           <div class="weight-row">
             <div class="weight-left">
               <div class="wlabel">Cooking Weight</div>
@@ -404,63 +494,53 @@ class XiaomiAirFryerCard extends HTMLElement {
 
           <div class="divider"></div>
 
-          <!-- MOD -->
-          <div class="section-label">Program gătire</div>
-          <div class="chips-wrap">
-            ${[['French Fries','🍟'],['Chicken Wing','🍗'],['Steak','🥩'],['Lamb Chops','🐑'],['Fish','🐟'],['Shrimp','🍤'],['Vegetables','🥦'],['Cake','🎂'],['Pizza','🍕'],['Defrost','❄️'],['Dried Fruit','🍇'],['Yogurt','🫙'],['Manual','🎛']]
-              .map(([v,e]) => `<div class="chip" data-group="mode" data-val="${v}">${e} ${v}</div>`).join('')}
-          </div>
+          <div class="section-label">${t.program}</div>
+          <div class="chips-wrap">${modes}</div>
 
           <div class="sel-row">
             <div class="sel-group">
-              <label>Textură</label>
-              <div class="seg-btns">
-                ${[['NONE','—'],['Crispy Roast','Crispy'],['Tender Roast','Tender'],['Degrease','Degrease']]
-                  .map(([v,l]) => `<div class="seg-btn" data-group="texture" data-val="${v}">${l}</div>`).join('')}
-              </div>
+              <label>${t.texture}</label>
+              <div class="seg-btns">${tex}</div>
             </div>
             <div class="sel-group">
-              <label>Cantitate</label>
-              <div class="seg-btns">
-                ${[['NULL','—'],['One Layer','1L'],['Double Layer','2L'],['Half Pot','½'],['Full Pot','Full']]
-                  .map(([v,l]) => `<div class="seg-btn" data-group="measure" data-val="${v}">${l}</div>`).join('')}
-              </div>
+              <label>${t.quantity}</label>
+              <div class="seg-btns">${qty}</div>
             </div>
           </div>
 
-          <div class="section-label">Întoarce coșul</div>
+          <div class="section-label">${t.turn_pot}</div>
           <div class="seg-btns" style="border-radius:10px;overflow:hidden;border:1px solid #2a2f45;margin-bottom:4px">
-            <div class="seg-btn" data-group="turnpot" data-val="No Need Turn Over Pot" style="flex:1">Nu e nevoie</div>
-            <div class="seg-btn" data-group="turnpot" data-val="Need Turn Over Pot"    style="flex:1">🔄 Întoarce</div>
+            <div class="seg-btn" data-group="turnpot" data-val="No Need Turn Over Pot" style="flex:1">${t.no_turn}</div>
+            <div class="seg-btn" data-group="turnpot" data-val="Need Turn Over Pot"    style="flex:1">${t.need_turn}</div>
           </div>
 
           <div class="divider"></div>
-          <div class="section-label">Setări</div>
+          <div class="section-label">${t.settings}</div>
           <div class="toggles-grid">
             <div class="toggle-card" id="togglePreheat">
-              <div class="toggle-left"><span>🌡</span><span class="toggle-name">Preîncălzire</span></div>
+              <div class="toggle-left"><span>🌡</span><span class="toggle-name">${t.preheat_sw}</span></div>
               <div class="toggle-pill"><div class="toggle-thumb"></div></div>
             </div>
             <div class="toggle-card" id="toggleAutoWrm">
-              <div class="toggle-left"><span>♨️</span><span class="toggle-name">Auto Warm</span></div>
+              <div class="toggle-left"><span>♨️</span><span class="toggle-name">${t.auto_warm}</span></div>
               <div class="toggle-pill"><div class="toggle-thumb"></div></div>
             </div>
             <div class="toggle-card" id="toggleCurWrm">
-              <div class="toggle-left"><span>🔥</span><span class="toggle-name">Keep Warm</span></div>
+              <div class="toggle-left"><span>🔥</span><span class="toggle-name">${t.keep_warm_sw}</span></div>
               <div class="toggle-pill"><div class="toggle-thumb"></div></div>
             </div>
             <div class="toggle-card" id="toggleTurnCfg">
-              <div class="toggle-left"><span>⚖️</span><span class="toggle-name">Turn Pot Cfg</span></div>
+              <div class="toggle-left"><span>⚖️</span><span class="toggle-name">${t.turn_cfg}</span></div>
               <div class="toggle-pill"><div class="toggle-thumb"></div></div>
             </div>
           </div>
 
         </div>
       </div>
-    </div>
-  `; }
+    </div>`;
+  }
 
-  // ── CSS ─────────────────────────────────────────────────────
+  // ── CSS ──────────────────────────────────────────────────────
   _css() { return `
     @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap');
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
