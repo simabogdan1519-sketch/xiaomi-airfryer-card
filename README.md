@@ -48,6 +48,7 @@ Add the card to any Lovelace dashboard:
 ```yaml
 type: custom:xiaomi-airfryer-card
 device: careli_maf10a_1c99
+language: en
 ```
 
 Replace `careli_maf10a_1c99` with the entity prefix for your device. You can find it by looking at any of the air fryer entities in **Settings → Devices & Services** — it's everything before the last underscore-separated suffix (e.g. `_air_fryer`, `_left_time`, etc.).
