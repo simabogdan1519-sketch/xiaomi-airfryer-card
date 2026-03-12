@@ -101,8 +101,6 @@ The card auto-discovers all entities based on the `device` prefix you provide:
 Tested with:
 - Xiaomi Smart Air Fryer MAF10A (`careli.fryer.maf10a`)
 
-Other careli fryer models may work if their entity structure matches.
+Other fryer models may work if their entity structure matches.
 
 
-
-MIT
