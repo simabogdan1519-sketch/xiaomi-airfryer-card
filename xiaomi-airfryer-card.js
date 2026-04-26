@@ -416,9 +416,9 @@ class XiaomiAirFryerCard extends HTMLElement {
                   <div class="af-slot"></div>
                   <div class="af-drawer-handle"></div>
                   <div class="af-basket"><div class="af-mesh" id="afMesh"></div></div>
-                  <div class="af-feet"><div class="af-foot"></div><div class="af-foot"></div></div>
                 </div>
               </div>
+              <div class="af-feet" id="afFeet"><div class="af-foot"></div><div class="af-foot"></div></div>
               <div class="af-heat" id="afHeat"></div>
             </div>
             <div class="click-hint">${t.click_hint}</div>
@@ -565,7 +565,7 @@ class XiaomiAirFryerCard extends HTMLElement {
     .card-main{padding:22px 22px 20px;position:relative;z-index:1}
     .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
     .header-left{display:flex;align-items:center;gap:10px}
-    .header-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:linear-gradient(135deg,#f97316,#dc2626);box-shadow:0 4px 12px rgba(249,115,22,.25)}
+    .header-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:linear-gradient(135deg,#7a9e6e,#5a7a50);box-shadow:0 4px 12px rgba(90,122,80,.20);color:#fff}
     .header-title{font-size:15px;font-weight:700;color:#1a1a1a;font-family:'Lora',serif}
     .header-sub{font-size:11px;color:#aaa;font-family:'Quicksand',sans-serif;font-weight:600}
     .status-badge{display:flex;align-items:center;gap:6px;border-radius:20px;padding:4px 10px;font-size:11px;font-family:'Quicksand',sans-serif;font-weight:700;transition:all .3s}
@@ -576,7 +576,7 @@ class XiaomiAirFryerCard extends HTMLElement {
     .machine-viewport{display:flex;justify-content:center;align-items:center;margin-bottom:16px;cursor:pointer;position:relative;user-select:none}
     .click-hint{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);font-size:9px;color:#bbb;font-family:'Quicksand',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
     .af-scene{position:relative;width:196px;height:228px}
-    .af-body{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:178px;height:188px;border-radius:18px 18px 14px 14px;background:linear-gradient(160deg,#fdf6ee 0%,#f5ede0 30%,#edddd0 65%,#e0cfc0 100%);border:1px solid #d8c8b8;box-shadow:0 10px 32px rgba(0,0,0,.10),inset -5px 0 16px rgba(0,0,0,.04),inset 5px 0 12px rgba(255,255,255,.55),inset 0 6px 14px rgba(255,255,255,.65),inset 0 -7px 18px rgba(0,0,0,.06)}
+    .af-body{position:absolute;bottom:10px;z-index:1;left:50%;transform:translateX(-50%);width:178px;height:188px;border-radius:18px 18px 14px 14px;background:linear-gradient(160deg,#fdf6ee 0%,#f5ede0 30%,#edddd0 65%,#e0cfc0 100%);border:1px solid #d8c8b8;box-shadow:0 10px 32px rgba(0,0,0,.10),inset -5px 0 16px rgba(0,0,0,.04),inset 5px 0 12px rgba(255,255,255,.55),inset 0 6px 14px rgba(255,255,255,.65),inset 0 -7px 18px rgba(0,0,0,.06)}
     .af-toppanel{position:absolute;top:0;left:0;right:0;height:50px;border-radius:18px 18px 0 0;display:flex;align-items:center;justify-content:center;gap:12px;padding:0 16px;background:linear-gradient(180deg,#f0e4d4 0%,#e4d4c0 100%);border-bottom:2px solid #d0bfac;box-shadow:inset 0 2px 6px rgba(255,255,255,.55)}
     .af-lcd{background:#050c04;border:1px solid #0a1508;border-radius:7px;padding:4px 10px;font-family:'Quicksand',monospace;color:#fb923c;box-shadow:inset 0 2px 6px rgba(0,0,0,.9),0 0 10px rgba(251,146,60,.2);text-shadow:0 0 8px #fb923c;min-width:60px;text-align:center;display:flex;flex-direction:column;align-items:center}
     .af-lcd-main{font-size:13px;font-weight:600;line-height:1.2}
@@ -594,7 +594,7 @@ class XiaomiAirFryerCard extends HTMLElement {
     .af-mesh{position:absolute;inset:7px;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(6,1fr);gap:2px}
     .af-hole{background:rgba(0,0,0,.08);border-radius:2px;transition:background .4s,box-shadow .4s}
     .af-hole.hot{background:rgba(234,88,12,.32);box-shadow:0 0 3px rgba(234,88,12,.25)}
-    .af-feet{display:flex;justify-content:space-between;width:136px;margin-top:5px}
+    .af-feet{display:flex;justify-content:space-between;width:136px;position:absolute;bottom:0;left:50%;transform:translateX(-50%);z-index:0}
     .af-foot{width:20px;height:9px;border-radius:0 0 5px 5px;background:linear-gradient(180deg,#d0bfb0,#a89888);border:1px solid #b8a898;box-shadow:0 3px 6px rgba(0,0,0,.15)}
     .af-heat{position:absolute;top:40px;left:50%;transform:translateX(-50%);width:140px;height:28px;pointer-events:none}
     .af-hw{position:absolute;bottom:0;width:2px;border-radius:1px;background:linear-gradient(180deg,rgba(249,115,22,.7),transparent);animation:hrise 2s ease-in-out infinite}
