@@ -182,7 +182,6 @@ class XiaomiAirFryerCard extends HTMLElement {
     const left    = this._s('left_time');
     const temp    = this._n('target_temperature');
     const time    = this._n('target_time');
-    const weight  = this._n('cooking_weight');
     const mode    = this._sel('mode');
     const texture = this._sel('texture');
     const measure = this._sel('target_cooking_measure');
@@ -226,11 +225,6 @@ class XiaomiAirFryerCard extends HTMLElement {
         this._q('#timeFill').style.width = this._pct(tv, 1, 120);
         this._all('#timePresets .tpreset').forEach(p => p.classList.toggle('active', parseInt(p.dataset.val) === tv));
       }
-    }
-    if (weight !== 'unavailable') {
-      const wv = parseFloat(weight);
-      this._q('#statWeight').textContent   = wv + 'g';
-      this._q('#weightDisplay').innerHTML  = wv + ' <small>g</small>';
     }
 
     this._q('#led2').classList.toggle('on', isActive);
@@ -323,9 +317,6 @@ class XiaomiAirFryerCard extends HTMLElement {
       });
     });
 
-    // weight
-    this._q('#weightMinus').addEventListener('click', () => this._setNumber('cooking_weight', Math.max(100,  parseFloat(this._n('cooking_weight')) - 50)));
-    this._q('#weightPlus').addEventListener('click',  () => this._setNumber('cooking_weight', Math.min(1800, parseFloat(this._n('cooking_weight')) + 50)));
 
     // selects
     this._all('.chip[data-group="mode"]').forEach(c => c.addEventListener('click', () => this._selectOption('mode', c.dataset.val)));
@@ -427,7 +418,6 @@ class XiaomiAirFryerCard extends HTMLElement {
           <div class="stats">
             <div class="stat"><span class="stat-val" id="statTemp">—°</span><span class="stat-key">${t.temp}</span></div>
             <div class="stat"><span class="stat-val" id="statLeft">—</span><span class="stat-key">${t.min_left}</span></div>
-            <div class="stat"><span class="stat-val" id="statWeight">—g</span><span class="stat-key">${t.weight}</span></div>
           </div>
 
           <div class="progress-section">
@@ -494,17 +484,7 @@ class XiaomiAirFryerCard extends HTMLElement {
             <div class="slider-limits"><span class="slider-limit">1 min</span><span class="slider-limit">120 min</span></div>
           </div>
 
-          <div class="section-label">${t.weight}</div>
-          <div class="weight-row">
-            <div class="weight-left">
-              <div class="wlabel">Cooking Weight</div>
-              <div class="wval" id="weightDisplay">— <small>g</small></div>
-            </div>
-            <div class="wbtns">
-              <button class="wbtn" id="weightMinus">−</button>
-              <button class="wbtn" id="weightPlus">+</button>
-            </div>
-          </div>
+
 
           <div class="divider"></div>
 
@@ -574,7 +554,7 @@ class XiaomiAirFryerCard extends HTMLElement {
     .status-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pdot 1.4s ease-in-out infinite}
     @keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
     .machine-viewport{display:flex;justify-content:center;align-items:center;margin-bottom:16px;cursor:pointer;position:relative;user-select:none}
-    .click-hint{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);font-size:9px;color:#bbb;font-family:'Quicksand',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+    .click-hint{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:9px;color:#bbb;font-family:'Quicksand',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;background:rgba(247,248,246,0.85);backdrop-filter:blur(4px);padding:2px 10px;border-radius:10px;border:1px solid rgba(0,0,0,.06)}
     .af-scene{position:relative;width:196px;height:228px}
     .af-body{position:absolute;bottom:10px;z-index:1;left:50%;transform:translateX(-50%);width:178px;height:188px;border-radius:18px 18px 14px 14px;background:linear-gradient(160deg,#fdf6ee 0%,#f5ede0 30%,#edddd0 65%,#e0cfc0 100%);border:1px solid #d8c8b8;box-shadow:0 10px 32px rgba(0,0,0,.10),inset -5px 0 16px rgba(0,0,0,.04),inset 5px 0 12px rgba(255,255,255,.55),inset 0 6px 14px rgba(255,255,255,.65),inset 0 -7px 18px rgba(0,0,0,.06)}
     .af-toppanel{position:absolute;top:0;left:0;right:0;height:50px;border-radius:18px 18px 0 0;display:flex;align-items:center;justify-content:center;gap:12px;padding:0 16px;background:linear-gradient(180deg,#f0e4d4 0%,#e4d4c0 100%);border-bottom:2px solid #d0bfac;box-shadow:inset 0 2px 6px rgba(255,255,255,.55)}
@@ -599,7 +579,7 @@ class XiaomiAirFryerCard extends HTMLElement {
     .af-heat{position:absolute;top:40px;left:50%;transform:translateX(-50%);width:140px;height:28px;pointer-events:none}
     .af-hw{position:absolute;bottom:0;width:2px;border-radius:1px;background:linear-gradient(180deg,rgba(249,115,22,.7),transparent);animation:hrise 2s ease-in-out infinite}
     @keyframes hrise{0%{height:0;opacity:0}40%{opacity:.85}100%{height:26px;opacity:0;transform:translateY(-4px) translateX(var(--dx,0px))}}
-    .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
     .stat{background:rgba(0,0,0,.02);border:1px solid rgba(0,0,0,.05);border-radius:12px;padding:10px 8px;text-align:center}
     .stat-val{font-size:17px;font-weight:700;color:#1a1a1a;display:block;font-family:'Lora',serif}
     .stat-key{font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;font-family:'Quicksand',sans-serif;font-weight:700}
@@ -654,13 +634,6 @@ class XiaomiAirFryerCard extends HTMLElement {
     input[type=range].blue::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#4f46e5);border:3px solid #f7f8f6;cursor:grab}
     .slider-limits{display:flex;justify-content:space-between;margin-top:4px}
     .slider-limit{font-size:9px;color:#ccc;font-family:'Quicksand',sans-serif;font-weight:600}
-    .weight-row{background:rgba(0,0,0,.02);border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-    .weight-left .wlabel{font-size:9px;color:#aaa;font-family:'Quicksand',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
-    .weight-left .wval{font-size:20px;font-weight:700;color:#1a1a1a;font-family:'Lora',serif}
-    .weight-left .wval small{font-size:10px;font-weight:400;color:#aaa;font-family:'Quicksand',sans-serif}
-    .wbtns{display:flex;gap:6px}
-    .wbtn{width:30px;height:30px;border-radius:9px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.04);color:#555;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-    .wbtn:hover{border-color:#f97316;color:#f97316}
     .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.07),transparent);margin:4px 0 0}
     .chips-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
     .chip{padding:5px 10px;border-radius:10px;border:1px solid rgba(0,0,0,.07);background:rgba(0,0,0,.02);color:#888;font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:'Quicksand',sans-serif;display:inline-flex;align-items:center;gap:5px}
