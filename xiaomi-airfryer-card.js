@@ -12,8 +12,8 @@ class XiaomiAirFryerCard extends HTMLElement {
   static get _i18n() { return {
     en: {
       title: 'Air Fryer Xiaomi', sub: 'kitchen · MAF10A',
-      status: { idle:'⏸ Standby', cooking:'🔥 Cooking', pause:'⏸ Paused',
-                preheat:'🌡 Preheating', keep_warm:'♨️ Keep Warm',
+      status: { idle:'Standby', cooking:'Cooking', pause:'Paused',
+                preheat:'Preheating', keep_warm:'Keep Warm',
                 appointment:'⏰ Scheduled', fault:'⚠️ Fault', unavailable:'● Offline' },
       temp: 'Temperature', time: 'Cook time', weight: 'Weight',
       preset_temp: 'Quick presets', preset_time: 'Quick presets',
@@ -30,8 +30,8 @@ class XiaomiAirFryerCard extends HTMLElement {
     },
     ro: {
       title: 'Air Fryer Xiaomi', sub: 'bucătărie · MAF10A',
-      status: { idle:'⏸ Standby', cooking:'🔥 Gătire', pause:'⏸ Pauză',
-                preheat:'🌡 Preîncălzire', keep_warm:'♨️ Keep Warm',
+      status: { idle:'Standby', cooking:'Gătire', pause:'Pauză',
+                preheat:'Preîncălzire', keep_warm:'Keep Warm',
                 appointment:'⏰ Programat', fault:'⚠️ Eroare', unavailable:'● Offline' },
       temp: 'Temperatură', time: 'Timp gătire', weight: 'Greutate',
       preset_temp: 'Preseturi rapide', preset_time: 'Preseturi rapide',
@@ -48,8 +48,8 @@ class XiaomiAirFryerCard extends HTMLElement {
     },
     de: {
       title: 'Xiaomi Heißluftfritteuse', sub: 'Küche · MAF10A',
-      status: { idle:'⏸ Bereit', cooking:'🔥 Garen', pause:'⏸ Pause',
-                preheat:'🌡 Vorheizen', keep_warm:'♨️ Warmhalten',
+      status: { idle:'Bereit', cooking:'Garen', pause:'Pause',
+                preheat:'Vorheizen', keep_warm:'Warmhalten',
                 appointment:'⏰ Geplant', fault:'⚠️ Fehler', unavailable:'● Offline' },
       temp: 'Temperatur', time: 'Garzeit', weight: 'Gewicht',
       preset_temp: 'Schnellwahl', preset_time: 'Schnellwahl',
@@ -66,8 +66,8 @@ class XiaomiAirFryerCard extends HTMLElement {
     },
     fr: {
       title: 'Friteuse à air Xiaomi', sub: 'cuisine · MAF10A',
-      status: { idle:'⏸ Veille', cooking:'🔥 Cuisson', pause:'⏸ Pause',
-                preheat:'🌡 Préchauffage', keep_warm:'♨️ Maintien chaud',
+      status: { idle:'Veille', cooking:'Cuisson', pause:'Pause',
+                preheat:'Préchauffage', keep_warm:'Maintien chaud',
                 appointment:'⏰ Programmé', fault:'⚠️ Erreur', unavailable:'● Hors ligne' },
       temp: 'Température', time: 'Durée de cuisson', weight: 'Poids',
       preset_temp: 'Préréglages', preset_time: 'Préréglages',
@@ -84,8 +84,8 @@ class XiaomiAirFryerCard extends HTMLElement {
     },
     es: {
       title: 'Freidora de aire Xiaomi', sub: 'cocina · MAF10A',
-      status: { idle:'⏸ En espera', cooking:'🔥 Cocinando', pause:'⏸ Pausa',
-                preheat:'🌡 Precalentando', keep_warm:'♨️ Manteniendo calor',
+      status: { idle:'En espera', cooking:'Cocinando', pause:'Pausa',
+                preheat:'Precalentando', keep_warm:'Manteniendo calor',
                 appointment:'⏰ Programado', fault:'⚠️ Error', unavailable:'● Sin conexión' },
       temp: 'Temperatura', time: 'Tiempo de cocción', weight: 'Peso',
       preset_temp: 'Ajustes rápidos', preset_time: 'Ajustes rápidos',
@@ -102,8 +102,8 @@ class XiaomiAirFryerCard extends HTMLElement {
     },
     it: {
       title: 'Friggitrice ad aria Xiaomi', sub: 'cucina · MAF10A',
-      status: { idle:'⏸ In attesa', cooking:'🔥 Cottura', pause:'⏸ Pausa',
-                preheat:'🌡 Preriscaldo', keep_warm:'♨️ Mantieni caldo',
+      status: { idle:'In attesa', cooking:'Cottura', pause:'Pausa',
+                preheat:'Preriscaldo', keep_warm:'Mantieni caldo',
                 appointment:'⏰ Programmato', fault:'⚠️ Errore', unavailable:'● Non in linea' },
       temp: 'Temperatura', time: 'Tempo di cottura', weight: 'Peso',
       preset_temp: 'Preimpostazioni', preset_time: 'Preimpostazioni',
@@ -120,8 +120,8 @@ class XiaomiAirFryerCard extends HTMLElement {
     },
     nl: {
       title: 'Xiaomi Airfryer', sub: 'keuken · MAF10A',
-      status: { idle:'⏸ Stand-by', cooking:'🔥 Aan het bakken', pause:'⏸ Gepauzeerd',
-                preheat:'🌡 Voorverwarmen', keep_warm:'♨️ Warmhouden',
+      status: { idle:'Stand-by', cooking:'Aan het bakken', pause:'Gepauzeerd',
+                preheat:'Voorverwarmen', keep_warm:'Warmhouden',
                 appointment:'⏰ Gepland', fault:'⚠️ Fout', unavailable:'● Offline' },
       temp: 'Temperatuur', time: 'Baktijd', weight: 'Gewicht',
       preset_temp: 'Snelle keuze', preset_time: 'Snelle keuze',
@@ -215,7 +215,7 @@ class XiaomiAirFryerCard extends HTMLElement {
     if (left !== 'unavailable') {
       this._q('#lcdTime').textContent   = leftMin + ' min';
       this._q('#statLeft').textContent  = leftMin;
-      this._q('#progLabel').textContent = `⏱ ${leftMin} ${t.min_left}`;
+      this._q('#progLabel').textContent = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${leftMin} ${t.min_left}`;
       this._q('#progFill').style.width  = pct + '%';
     }
     if (time !== 'unavailable') {
@@ -363,7 +363,21 @@ class XiaomiAirFryerCard extends HTMLElement {
     const t = this._t;
     const tex = Object.entries(t.tex).map(([v,l]) => `<div class="seg-btn" data-group="texture" data-val="${v}">${l}</div>`).join('');
     const qty = Object.entries(t.qty).map(([v,l]) => `<div class="seg-btn" data-group="measure" data-val="${v}">${l}</div>`).join('');
-    const modes = [['French Fries','🍟'],['Chicken Wing','🍗'],['Steak','🥩'],['Lamb Chops','🐑'],['Fish','🐟'],['Shrimp','🍤'],['Vegetables','🥦'],['Cake','🎂'],['Pizza','🍕'],['Defrost','❄️'],['Dried Fruit','🍇'],['Yogurt','🫙'],['Manual','🎛']]
+    const modes = [
+        ['French Fries','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="8" width="3" height="13" rx="1"/><rect x="8" y="5" width="3" height="16" rx="1"/><rect x="13" y="8" width="3" height="13" rx="1"/><rect x="18" y="5" width="3" height="16" rx="1"/></svg>'],
+        ['Chicken Wing','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5s1-1 4 2 7 11 7 11"/><path d="M15 18s4-2 4-7-4-9-9-9-6 4-6 4"/></svg>'],
+        ['Steak','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12h8"/></svg>'],
+        ['Lamb Chops','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 7c0 2.21-3.58 4-8 4S4 9.21 4 7c0-2.21 3.58-4 8-4s8 1.79 8 4z"/><path d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7"/></svg>'],
+        ['Fish','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6.5 12C6.5 8.96 9.24 6.5 12 6.5c4.14 0 7.5 2.46 7.5 5.5S16.14 17.5 12 17.5c-2.76 0-5.5-2.46-5.5-5.5z"/><path d="M6.5 12l-3.5-4v8l3.5-4z"/></svg>'],
+        ['Shrimp','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 3C9 3 5 8 5 12c0 3 2 5 5 6"/><path d="M10 18c1 2 3 3 5 3 4 0 5-3 5-7 0-3-2-5-5-5"/></svg>'],
+        ['Vegetables','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 22l10-10M16 8c0 4-6 12-6 12s-6-8-6-12a6 6 0 0112 0z"/></svg>'],
+        ['Cake','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-8a2 2 0 00-2-2H6a2 2 0 00-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2 1 2 1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>'],
+        ['Pizza','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l9 19H3z"/><path d="M8 15c1-1 2.5-1 3.5 0"/></svg>'],
+        ['Defrost','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 7l-5-5-5 5"/><path d="M17 17l-5 5-5-5"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M7 7l-5 5 5 5"/><path d="M17 7l5 5-5 5"/></svg>'],
+        ['Dried Fruit','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><path d="M12 5v2M12 17v2M5 12H3M21 12h-2"/></svg>'],
+        ['Yogurt','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3h8l1 9H7z"/><path d="M7 12l1 9h8l1-9"/></svg>'],
+        ['Manual','<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M17.66 17.66l1.41 1.41M4.93 4.93l1.41 1.41M6.34 17.66l-1.41 1.41M2 12h2M20 12h2M12 2v2M12 20v2"/></svg>']
+      ]
       .map(([v,e]) => `<div class="chip" data-group="mode" data-val="${v}">${e} ${v}</div>`).join('');
 
     return `
@@ -372,7 +386,7 @@ class XiaomiAirFryerCard extends HTMLElement {
         <div class="card-main">
           <div class="card-header">
             <div class="header-left">
-              <div class="header-icon">🍟</div>
+              <div class="header-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 3z"/></svg></div>
               <div>
                 <div class="header-title">${t.title}</div>
                 <div class="header-sub">${t.sub}</div>
@@ -419,16 +433,16 @@ class XiaomiAirFryerCard extends HTMLElement {
           <div class="progress-section">
             <div class="prog-header">
               <span class="prog-label">${t.prog_label}</span>
-              <span class="prog-time" id="progLabel">⏱ — ${t.min_left}</span>
+              <span class="prog-time" id="progLabel"><span style="display:inline-flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> — ${t.min_left}</span></span>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
           </div>
 
           <div class="main-controls">
-            <button class="btn btn-start"  id="btnStart">${t.start}</button>
-            <button class="btn btn-pause"  id="btnPause">${t.pause_btn}</button>
-            <button class="btn btn-resume" id="btnResume">${t.resume}</button>
-            <button class="btn btn-stop"   id="btnStop">${t.stop}</button>
+            <button class="btn btn-start"  id="btnStart"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> ${t.start}</button>
+            <button class="btn btn-pause"  id="btnPause"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> ${t.pause_btn}</button>
+            <button class="btn btn-resume" id="btnResume"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> ${t.resume}</button>
+            <button class="btn btn-stop"   id="btnStop"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> ${t.stop}</button>
           </div>
         </div>
       </div>
@@ -518,19 +532,19 @@ class XiaomiAirFryerCard extends HTMLElement {
           <div class="section-label">${t.settings}</div>
           <div class="toggles-grid">
             <div class="toggle-card" id="togglePreheat">
-              <div class="toggle-left"><span>🌡</span><span class="toggle-name">${t.preheat_sw}</span></div>
+              <div class="toggle-left"><span style="display:flex;align-items:center;color:#d4640a"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg></span><span class="toggle-name">${t.preheat_sw}</span></div>
               <div class="toggle-pill"><div class="toggle-thumb"></div></div>
             </div>
             <div class="toggle-card" id="toggleAutoWrm">
-              <div class="toggle-left"><span>♨️</span><span class="toggle-name">${t.auto_warm}</span></div>
+              <div class="toggle-left"><span style="display:flex;align-items:center;color:#d4640a"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/><circle cx="12" cy="12" r="4"/></svg></span><span class="toggle-name">${t.auto_warm}</span></div>
               <div class="toggle-pill"><div class="toggle-thumb"></div></div>
             </div>
             <div class="toggle-card" id="toggleCurWrm">
-              <div class="toggle-left"><span>🔥</span><span class="toggle-name">${t.keep_warm_sw}</span></div>
+              <div class="toggle-left"><span style="display:flex;align-items:center;color:#d4640a"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 3z"/></svg></span><span class="toggle-name">${t.keep_warm_sw}</span></div>
               <div class="toggle-pill"><div class="toggle-thumb"></div></div>
             </div>
             <div class="toggle-card" id="toggleTurnCfg">
-              <div class="toggle-left"><span>⚖️</span><span class="toggle-name">${t.turn_cfg}</span></div>
+              <div class="toggle-left"><span style="display:flex;align-items:center;color:#d4640a"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 00-1.905 1.46L2 20h20L19.405 9.46A2 2 0 0017.5 8z"/></svg></span><span class="toggle-name">${t.turn_cfg}</span></div>
               <div class="toggle-pill"><div class="toggle-thumb"></div></div>
             </div>
           </div>
@@ -562,26 +576,26 @@ class XiaomiAirFryerCard extends HTMLElement {
     .machine-viewport{display:flex;justify-content:center;align-items:center;margin-bottom:16px;cursor:pointer;position:relative;user-select:none}
     .click-hint{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);font-size:9px;color:#bbb;font-family:'Quicksand',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
     .af-scene{position:relative;width:196px;height:228px}
-    .af-body{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:178px;height:188px;border-radius:18px 18px 14px 14px;background:linear-gradient(160deg,#ffffff 0%,#f2f4f7 28%,#e6e9ef 62%,#d4d8e2 100%);border:1px solid #c4c9d4;box-shadow:0 10px 32px rgba(0,0,0,.14),inset -5px 0 16px rgba(0,0,0,.06),inset 5px 0 12px rgba(255,255,255,.65),inset 0 6px 14px rgba(255,255,255,.75),inset 0 -7px 18px rgba(0,0,0,.08)}
-    .af-toppanel{position:absolute;top:0;left:0;right:0;height:50px;border-radius:18px 18px 0 0;display:flex;align-items:center;justify-content:center;gap:12px;padding:0 16px;background:linear-gradient(180deg,#eaecf1 0%,#d8dce6 100%);border-bottom:2px solid #bec3cf;box-shadow:inset 0 2px 6px rgba(255,255,255,.55)}
+    .af-body{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:178px;height:188px;border-radius:18px 18px 14px 14px;background:linear-gradient(160deg,#fdf6ee 0%,#f5ede0 30%,#edddd0 65%,#e0cfc0 100%);border:1px solid #d8c8b8;box-shadow:0 10px 32px rgba(0,0,0,.10),inset -5px 0 16px rgba(0,0,0,.04),inset 5px 0 12px rgba(255,255,255,.55),inset 0 6px 14px rgba(255,255,255,.65),inset 0 -7px 18px rgba(0,0,0,.06)}
+    .af-toppanel{position:absolute;top:0;left:0;right:0;height:50px;border-radius:18px 18px 0 0;display:flex;align-items:center;justify-content:center;gap:12px;padding:0 16px;background:linear-gradient(180deg,#f0e4d4 0%,#e4d4c0 100%);border-bottom:2px solid #d0bfac;box-shadow:inset 0 2px 6px rgba(255,255,255,.55)}
     .af-lcd{background:#050c04;border:1px solid #0a1508;border-radius:7px;padding:4px 10px;font-family:'Quicksand',monospace;color:#fb923c;box-shadow:inset 0 2px 6px rgba(0,0,0,.9),0 0 10px rgba(251,146,60,.2);text-shadow:0 0 8px #fb923c;min-width:60px;text-align:center;display:flex;flex-direction:column;align-items:center}
     .af-lcd-main{font-size:13px;font-weight:600;line-height:1.2}
     .af-lcd-sub{font-size:8px;color:rgba(251,146,60,.55);line-height:1.1}
     .af-leds{display:flex;gap:5px}
     .af-led{width:6px;height:6px;border-radius:50%;background:#c8d0dc;border:1px solid #b0b8c4}
     .af-led.on{background:#fb923c;box-shadow:0 0 6px #fb923c}
-    .af-knob{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#e8ecf2,#b0b8c8);border:2px solid #a0a8b8;box-shadow:0 3px 8px rgba(0,0,0,.18),inset 0 1px 3px rgba(255,255,255,.7);position:relative}
+    .af-knob{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#f0e8dc,#c8b8a4);border:2px solid #b8a894;box-shadow:0 3px 8px rgba(0,0,0,.14),inset 0 1px 3px rgba(255,255,255,.7);position:relative}
     .af-knob::after{content:'';position:absolute;top:5px;left:50%;transform:translateX(-50%);width:3px;height:6px;background:#f97316;border-radius:2px;box-shadow:0 0 5px rgba(249,115,22,.7)}
     .af-mid{position:absolute;top:50px;left:0;right:0;bottom:0;border-radius:0 0 14px 14px;display:flex;flex-direction:column;align-items:center;padding-top:8px}
-    .af-slot{width:138px;height:3px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.12),rgba(0,0,0,.18),rgba(0,0,0,.12),transparent);border-radius:2px}
-    .af-drawer-handle{width:76px;height:15px;margin-top:7px;background:linear-gradient(180deg,#d4d8e4,#b4bcc8);border-radius:8px;border:1px solid #a4acb8;box-shadow:0 3px 8px rgba(0,0,0,.15),inset 0 1px 3px rgba(255,255,255,.5);position:relative}
+    .af-slot{width:138px;height:3px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.09),rgba(0,0,0,.14),rgba(0,0,0,.09),transparent);border-radius:2px}
+    .af-drawer-handle{width:76px;height:15px;margin-top:7px;background:linear-gradient(180deg,#e8d8c4,#d0bfaa);border-radius:8px;border:1px solid #c0afa0;box-shadow:0 3px 8px rgba(0,0,0,.12),inset 0 1px 3px rgba(255,255,255,.5);position:relative}
     .af-drawer-handle::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22px;height:3px;background:rgba(0,0,0,.1);border-radius:2px}
-    .af-basket{width:144px;height:88px;margin-top:6px;background:linear-gradient(160deg,#e4e8f0 0%,#d0d4e0 50%,#c0c4d0 100%);border-radius:8px 8px 14px 14px;border:1px solid #b4bcc8;border-top:2px solid #c4ccd8;box-shadow:0 6px 18px rgba(0,0,0,.14),inset 0 3px 8px rgba(0,0,0,.07);position:relative;overflow:hidden}
+    .af-basket{width:144px;height:88px;margin-top:6px;background:linear-gradient(160deg,#e8ddd0 0%,#d8cdc0 50%,#c8bdb0 100%);border-radius:8px 8px 14px 14px;border:1px solid #c4b4a4;border-top:2px solid #d0bfb0;box-shadow:0 6px 18px rgba(0,0,0,.11),inset 0 3px 8px rgba(0,0,0,.07);position:relative;overflow:hidden}
     .af-mesh{position:absolute;inset:7px;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(6,1fr);gap:2px}
-    .af-hole{background:rgba(0,0,0,.10);border-radius:2px;transition:background .4s,box-shadow .4s}
+    .af-hole{background:rgba(0,0,0,.08);border-radius:2px;transition:background .4s,box-shadow .4s}
     .af-hole.hot{background:rgba(234,88,12,.32);box-shadow:0 0 3px rgba(234,88,12,.25)}
     .af-feet{display:flex;justify-content:space-between;width:136px;margin-top:5px}
-    .af-foot{width:20px;height:9px;border-radius:0 0 5px 5px;background:linear-gradient(180deg,#c0c4d0,#9ca0ac);border:1px solid #aeb4c0;box-shadow:0 3px 6px rgba(0,0,0,.15)}
+    .af-foot{width:20px;height:9px;border-radius:0 0 5px 5px;background:linear-gradient(180deg,#d0bfb0,#a89888);border:1px solid #b8a898;box-shadow:0 3px 6px rgba(0,0,0,.15)}
     .af-heat{position:absolute;top:40px;left:50%;transform:translateX(-50%);width:140px;height:28px;pointer-events:none}
     .af-hw{position:absolute;bottom:0;width:2px;border-radius:1px;background:linear-gradient(180deg,rgba(249,115,22,.7),transparent);animation:hrise 2s ease-in-out infinite}
     @keyframes hrise{0%{height:0;opacity:0}40%{opacity:.85}100%{height:26px;opacity:0;transform:translateY(-4px) translateX(var(--dx,0px))}}
@@ -598,7 +612,7 @@ class XiaomiAirFryerCard extends HTMLElement {
     .progress-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:30px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4));animation:shimmer 1.5s linear infinite}
     @keyframes shimmer{0%,100%{opacity:0}50%{opacity:1}}
     .main-controls{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px}
-    .btn{padding:10px 8px;border-radius:12px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.03);color:#555;font-family:'Quicksand',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+    .btn{padding:10px 8px;border-radius:12px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.03);color:#555;font-family:'Quicksand',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px}
     .btn:hover{background:rgba(0,0,0,.07);transform:translateY(-1px)}
     .btn-start{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.25);color:#15803d}
     .btn-pause{color:#b45309}.btn-resume{color:#2563eb}.btn-stop{color:#dc2626}
@@ -649,7 +663,7 @@ class XiaomiAirFryerCard extends HTMLElement {
     .wbtn:hover{border-color:#f97316;color:#f97316}
     .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.07),transparent);margin:4px 0 0}
     .chips-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
-    .chip{padding:5px 10px;border-radius:10px;border:1px solid rgba(0,0,0,.07);background:rgba(0,0,0,.02);color:#888;font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:'Quicksand',sans-serif}
+    .chip{padding:5px 10px;border-radius:10px;border:1px solid rgba(0,0,0,.07);background:rgba(0,0,0,.02);color:#888;font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:'Quicksand',sans-serif;display:inline-flex;align-items:center;gap:5px}
     .chip.active{background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.35);color:#d4640a}
     .sel-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
     .sel-group label{font-size:9px;color:#bbb;font-family:'Quicksand',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:5px}
